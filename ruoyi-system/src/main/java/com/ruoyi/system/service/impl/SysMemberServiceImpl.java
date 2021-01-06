@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,8 @@ import java.util.stream.Collectors;
 public class SysMemberServiceImpl implements SysMemberService {
     @Resource
     private SysMemberMapper sysMemberMapper;
+    private final static String WOLF_KILL = "狼人杀";
+    private final static String ROOM = "包房";
 
     @Override
     public PageInfo<SysMember> page(Integer pageNum, Integer pageSize, String name, String nickname) {
@@ -69,6 +72,8 @@ public class SysMemberServiceImpl implements SysMemberService {
         return count > 0;
     }
 
+
+
     @Transactional
     @Override
     public boolean consume(SysMember member) {
@@ -88,7 +93,46 @@ public class SysMemberServiceImpl implements SysMemberService {
 
         //判断用户余额是否足以扣除本次消费
         DoubleSummaryStatistics sum = products.stream().collect(Collectors.summarizingDouble(
-                product -> product.getPrice().add(product.getAdditionalPrice()).floatValue()
+                product -> {
+                    LocalDateTime now = LocalDateTime.now();
+                    int week = now.getDayOfWeek().getValue();
+                    int hour = now.getHour();
+                    double finalPrice = 0;
+                    // 狼人杀：
+                    if(product.getName().equals(WOLF_KILL)){
+                        double price = product.getPrice().doubleValue();
+                        double additionalPrice = product.getAdditionalPrice().doubleValue();
+
+                        // 周五到周日：平时65，超过2点85/人
+                        if(isWeekend(week)){
+                            if(isMidNight(hour)){
+                                finalPrice = price + additionalPrice + 20;
+                            }else{
+                                finalPrice = price + 20;
+                            }
+                        }else{
+                            // 周一到周四：平时45，超过凌晨2点65/人
+                            if(isMidNight(hour)){
+                                finalPrice = price + additionalPrice ;
+                            }else{
+                                finalPrice = price;
+                            }
+                        }
+                        return finalPrice;
+                    }
+
+                    // 包房：
+                    if(product.getName().contains(ROOM)){
+                        if(isWeekend(week)){
+                            finalPrice = product.getAdditionalPrice().doubleValue();
+                        }else{
+                            finalPrice = product.getPrice().doubleValue();
+                        }
+                        return finalPrice;
+                    }
+
+                    return product.getPrice().doubleValue();
+                     }
         ));
 
         double sumOfExpenditure = sum.getSum();
@@ -120,11 +164,18 @@ public class SysMemberServiceImpl implements SysMemberService {
         return count > 0;
     }
 
+    private boolean isMidNight(int hour) {
+        return hour >= 2 && hour <= 6;
+    }
+
     @Override
     public void batchDelete(List<String> ids) {
         sysMemberMapper.batchDelete(ids);
     }
 
+    private boolean isWeekend(int week){
+        return week >= 5 && week <= 7;
+    }
     /**
      * 获取所有充值金额
      * @param additional

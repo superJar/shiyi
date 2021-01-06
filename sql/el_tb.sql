@@ -1,0 +1,43 @@
+-- 拾壹商品表
+CREATE TABLE SYS_PRODUCT
+(
+    ID               INT COMMENT '主键ID',
+	NAME             VARCHAR(32) COMMENT'商品名称',
+    TYPE             INT COMMENT '商品类型 0-酒水小吃类，1-桌游类，2-包房类',
+    PRICE            DECIMAL(32, 10) COMMENT '单价价格',
+    ADDITIONAL_PRICE DECIMAL(32, 10) COMMENT '附加价格',
+    PIC              VARCHAR(32) COMMENT '商品图片',
+    CREATED_BY       VARCHAR(32) COMMENT '创建人',
+    CREATED_TIME     DATETIME COMMENT '创建时间',
+    UPDATED_BY       VARCHAR(32) COMMENT '更新人',
+    UPDATED_TIME     DATETIME COMMENT '更新时间',
+    SPARE1           VARCHAR(32) COMMENT '备用字段1',
+    SPARE2           VARCHAR(32) COMMENT '备用字段2',
+    SPARE3           VARCHAR(32) COMMENT '备用字段3'
+) COMMENT = '拾壹商品表 ';
+
+
+-- 会员表
+CREATE TABLE SYS_MEMBER(
+    ID INT NOT NULL AUTO_INCREMENT  COMMENT '主键ID' ,
+    CARD_NUM VARCHAR(16)    COMMENT '卡号' ,
+    NAME VARCHAR(16)    COMMENT '姓名' ,
+    NICKNAME VARCHAR(16)    COMMENT '昵称' ,
+    GENDER VARCHAR(1)    COMMENT '性别 0-女性，1-男性' ,
+    PHONE VARCHAR(15)    COMMENT '手机号' ,
+    BALANCE DECIMAL(7,2)    COMMENT '余额' ,
+    ADDITIONAL_BALANCE DECIMAL(7,2)    COMMENT '附加余额 该余额不算作正式余额' ,
+    SUM_OF_TOP_UP DECIMAL(8,2)    COMMENT '充值总计' ,
+    SUM_OF_CONSUMPTION DECIMAL(8,2)    COMMENT '消费总计' ,
+    REMARK VARCHAR(64)    COMMENT '备注' ,
+    CREATED_BY VARCHAR(32)    COMMENT '创建人' ,
+    CREATED_TIME DATETIME    COMMENT '创建时间' ,
+    UPDATED_BY VARCHAR(32)    COMMENT '更新人' ,
+    UPDATED_TIME DATETIME    COMMENT '更新时间' ,
+    SPARE1 VARCHAR(1)    COMMENT '备用字段1' ,
+    SPARE2 VARCHAR(1)    COMMENT '备用字段2' ,
+    SPARE3 VARCHAR(1)    COMMENT '备用字段3' ,
+    PRIMARY KEY (ID)
+) COMMENT = '会员表 ';
+
+

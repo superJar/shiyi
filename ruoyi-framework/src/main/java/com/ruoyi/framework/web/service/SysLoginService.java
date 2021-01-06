@@ -46,16 +46,20 @@ public class SysLoginService
      */
     public String login(String username, String password, String code, String uuid)
     {
+        // 获取到验证码的uuid
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
+        // 从redis那拿出uuid值
         String captcha = redisCache.getCacheObject(verifyKey);
         redisCache.deleteObject(verifyKey);
         if (captcha == null)
         {
+            // 异步处理：用ScheduledExecutorService新建了个线程返回登录失败的信息
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
             throw new CaptchaExpireException();
         }
         if (!code.equalsIgnoreCase(captcha))
         {
+            // 异步处理：用ScheduledExecutorService新建了个线程返回登录失败的信息
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
             throw new CaptchaException();
         }
@@ -82,7 +86,7 @@ public class SysLoginService
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        // 生成token
+        // 生成token （token此时变成了JWT）
         return tokenService.createToken(loginUser);
     }
 }

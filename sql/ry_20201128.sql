@@ -161,6 +161,7 @@ insert into sys_menu values('1', '系统管理', '0', '1', 'system',           n
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        1, 0, 'C', '0', '0', 'system:user:list',        'user',          'admin', sysdate(), '', null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        1, 0, 'C', '0', '0', 'system:role:list',        'peoples',       'admin', sysdate(), '', null, '角色管理菜单');
 insert into sys_menu values('102',  '菜单管理', '1',   '3', 'menu',       'system/menu/index',        1, 0, 'C', '0', '0', 'system:menu:list',        'tree-table',    'admin', sysdate(), '', null, '菜单管理菜单');
+insert into sys_menu values('103',  '会员管理', '1',   '3', 'member',       'system/member/index',        1, 0, 'C', '0', '0', 'system:member:list',        'member',    'admin', sysdate(), '', null, '会员管理菜单');
 insert into sys_menu values('104',  '商品管理', '1',   '5', 'product',    'system/product/index',        1, 0, 'C', '0', '0', 'system:product:list',        'product',          'admin', sysdate(), '', null, '商品管理菜单');
 insert into sys_menu values('105',  '字典管理', '1',   '6', 'dict',       'system/dict/index',        1, 0, 'C', '0', '0', 'system:dict:list',        'dict',          'admin', sysdate(), '', null, '字典管理菜单');
 insert into sys_menu values('106',  '参数设置', '1',   '7', 'config',     'system/config/index',      1, 0, 'C', '0', '0', 'system:config:list',      'edit',          'admin', sysdate(), '', null, '参数设置菜单');
@@ -187,15 +188,15 @@ insert into sys_menu values('1014', '菜单新增', '102', '2',  '', '', 1, 0, '
 insert into sys_menu values('1015', '菜单修改', '102', '3',  '', '', 1, 0, 'F', '0', '0', 'system:menu:edit',           '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1016', '菜单删除', '102', '4',  '', '', 1, 0, 'F', '0', '0', 'system:menu:remove',         '#', 'admin', sysdate(), '', null, '');
 -- 部门管理按钮
-insert into sys_menu values('1017', '部门查询', '104', '1',  '', '', 1, 0, 'F', '0', '0', 'system:product:list',          '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('1018', '部门保存', '104', '2',  '', '', 1, 0, 'F', '0', '0', 'system:product:save',           '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('1019', '部门删除', '104', '3',  '', '', 1, 0, 'F', '0', '0', 'system:product:del',         '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1017', '商品查询', '104', '1',  '', '', 1, 0, 'F', '0', '0', 'system:product:list',          '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1018', '商品保存', '104', '2',  '', '', 1, 0, 'F', '0', '0', 'system:product:save',           '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1019', '商品删除', '104', '3',  '', '', 1, 0, 'F', '0', '0', 'system:product:del',         '#', 'admin', sysdate(), '', null, '');
 -- 岗位管理按钮
-insert into sys_menu values('1021', '岗位查询', '104', '1',  '', '', 1, 0, 'F', '0', '0', 'system:post:query',          '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('1022', '岗位新增', '104', '2',  '', '', 1, 0, 'F', '0', '0', 'system:post:add',            '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('1023', '岗位修改', '104', '3',  '', '', 1, 0, 'F', '0', '0', 'system:post:edit',           '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('1024', '岗位删除', '104', '4',  '', '', 1, 0, 'F', '0', '0', 'system:post:remove',         '#', 'admin', sysdate(), '', null, '');
-insert into sys_menu values('1025', '岗位导出', '104', '5',  '', '', 1, 0, 'F', '0', '0', 'system:post:export',         '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1021', '会员查询', '103', '1',  '', '', 1, 0, 'F', '0', '0', 'system:member:list',          '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1022', '会员保存', '103', '2',  '', '', 1, 0, 'F', '0', '0', 'system:member:save',            '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1023', '会员充值', '103', '3',  '', '', 1, 0, 'F', '0', '0', 'system:member:topup',           '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1024', '会员消费', '103', '4',  '', '', 1, 0, 'F', '0', '0', 'system:member:consume',         '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu values('1025', '会员删除', '103', '5',  '', '', 1, 0, 'F', '0', '0', 'system:member:del',         '#', 'admin', sysdate(), '', null, '');
 -- 字典管理按钮
 insert into sys_menu values('1026', '字典查询', '105', '1', '#', '', 1, 0, 'F', '0', '0', 'system:dict:query',          '#', 'admin', sysdate(), '', null, '');
 insert into sys_menu values('1027', '字典新增', '105', '2', '#', '', 1, 0, 'F', '0', '0', 'system:dict:add',            '#', 'admin', sysdate(), '', null, '');

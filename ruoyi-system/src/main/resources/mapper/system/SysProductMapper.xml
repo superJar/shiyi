@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysProductMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.SysProduct">
+        <!--@Table sys_product-->
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="type" column="TYPE" jdbcType="INTEGER"/>
+        <result property="price" column="PRICE" jdbcType="NUMERIC"/>
+        <result property="additionalPrice" column="ADDITIONAL_PRICE" jdbcType="NUMERIC"/>
+        <result property="pic" column="PIC" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="CREATED_BY" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="CREATED_TIME" jdbcType="TIMESTAMP"/>
+        <result property="updatedBy" column="UPDATED_BY" jdbcType="VARCHAR"/>
+        <result property="updatedTime" column="UPDATED_TIME" jdbcType="TIMESTAMP"/>
+        <result property="spare1" column="SPARE1" jdbcType="VARCHAR"/>
+        <result property="spare2" column="SPARE2" jdbcType="VARCHAR"/>
+        <result property="spare3" column="SPARE3" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="BASE_COLUMN">
+        ID, `TYPE`, PRICE,
+      ADDITIONAL_PRICE, PIC, CREATED_BY,
+      CREATED_TIME, UPDATED_BY, UPDATED_TIME,
+      SPARE1, SPARE2, SPARE3
+    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
+        from shiyi.sys_product
+        where  = #{}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
+        from shiyi.sys_product
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
+        from shiyi.sys_product
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="type != null">
+                and TYPE = #{type}
+            </if>
+            <if test="price != null">
+                and PRICE = #{price}
+            </if>
+            <if test="additionalPrice != null">
+                and ADDITIONAL_PRICE = #{additionalPrice}
+            </if>
+            <if test="pic != null and pic != ''">
+                and PIC = #{pic}
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                and CREATED_BY = #{createdBy}
+            </if>
+            <if test="createdTime != null">
+                and CREATED_TIME = #{createdTime}
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                and UPDATED_BY = #{updatedBy}
+            </if>
+            <if test="updatedTime != null">
+                and UPDATED_TIME = #{updatedTime}
+            </if>
+            <if test="spare1 != null and spare1 != ''">
+                and SPARE1 = #{spare1}
+            </if>
+            <if test="spare2 != null and spare2 != ''">
+                and SPARE2 = #{spare2}
+            </if>
+            <if test="spare3 != null and spare3 != ''">
+                and SPARE3 = #{spare3}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryByCondition" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            <include refid="BASE_COLUMN"></include>
+        from sys_product
+        <if test="queryString != null and queryString != ''">where NAME like #{queryString}</if>
+    </select>
+
+    <!--新增所有列-->
+<!--    <insert id="insert" keyProperty="" useGeneratedKeys="true">-->
+<!--        insert into shiyi.sys_product(ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3)-->
+<!--        values (#{id}, #{type}, #{price}, #{additionalPrice}, #{pic}, #{createdBy}, #{createdTime}, #{updatedBy}, #{updatedTime}, #{spare1}, #{spare2}, #{spare3})-->
+<!--    </insert>-->
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update shiyi.sys_product
+        <set>
+            <if test="id != null">
+                ID = #{id},
+            </if>
+            <if test="type != null">
+                TYPE = #{type},
+            </if>
+            <if test="price != null">
+                PRICE = #{price},
+            </if>
+            <if test="additionalPrice != null">
+                ADDITIONAL_PRICE = #{additionalPrice},
+            </if>
+            <if test="pic != null and pic != ''">
+                PIC = #{pic},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null">
+                CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null">
+                UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="spare1 != null and spare1 != ''">
+                SPARE1 = #{spare1},
+            </if>
+            <if test="spare2 != null and spare2 != ''">
+                SPARE2 = #{spare2},
+            </if>
+            <if test="spare3 != null and spare3 != ''">
+                SPARE3 = #{spare3},
+            </if>
+        </set>
+        where  = ID #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="batchDelete">
+        delete from shiyi.sys_product where ID
+            <foreach collection="list" index="index" item="item" open="IN (" close=")" separator=",">
+                #{item}
+            </foreach>
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.ruoyi.system.domain.SysProduct">
+        insert into sys_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="type != null">
+                `TYPE`,
+            </if>
+            <if test="price != null">
+                PRICE,
+            </if>
+            <if test="additionalPrice != null">
+                ADDITIONAL_PRICE,
+            </if>
+            <if test="pic != null">
+                PIC,
+            </if>
+            <if test="createdBy != null">
+                CREATED_BY,
+            </if>
+            <if test="createdTime != null">
+                CREATED_TIME,
+            </if>
+            <if test="updatedBy != null">
+                UPDATED_BY,
+            </if>
+            <if test="updatedTime != null">
+                UPDATED_TIME,
+            </if>
+            <if test="spare1 != null">
+                SPARE1,
+            </if>
+            <if test="spare2 != null">
+                SPARE2,
+            </if>
+            <if test="spare3 != null">
+                SPARE3,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="additionalPrice != null">
+                #{additionalPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="pic != null">
+                #{pic,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null">
+                #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updatedTime != null">
+                #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="spare1 != null">
+                #{spare1,jdbcType=VARCHAR},
+            </if>
+            <if test="spare2 != null">
+                #{spare2,jdbcType=VARCHAR},
+            </if>
+            <if test="spare3 != null">
+                #{spare3,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

@@ -26,65 +26,65 @@
     </sql>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="BaseResultMap">
-        select
-          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
-        from shiyi.sys_product
-        where  = #{}
-    </select>
+<!--    <select id="queryById" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3-->
+<!--        from shiyi.sys_product-->
+<!--        where  = #{}-->
+<!--    </select>-->
 
     <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="BaseResultMap">
-        select
-          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
-        from shiyi.sys_product
-        limit #{offset}, #{limit}
-    </select>
+<!--    <select id="queryAllByLimit" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3-->
+<!--        from shiyi.sys_product-->
+<!--        limit #{offset}, #{limit}-->
+<!--    </select>-->
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAll" resultMap="BaseResultMap">
-        select
-          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
-        from shiyi.sys_product
-        <where>
-            <if test="id != null">
-                and ID = #{id}
-            </if>
-            <if test="type != null">
-                and TYPE = #{type}
-            </if>
-            <if test="price != null">
-                and PRICE = #{price}
-            </if>
-            <if test="additionalPrice != null">
-                and ADDITIONAL_PRICE = #{additionalPrice}
-            </if>
-            <if test="pic != null and pic != ''">
-                and PIC = #{pic}
-            </if>
-            <if test="createdBy != null and createdBy != ''">
-                and CREATED_BY = #{createdBy}
-            </if>
-            <if test="createdTime != null">
-                and CREATED_TIME = #{createdTime}
-            </if>
-            <if test="updatedBy != null and updatedBy != ''">
-                and UPDATED_BY = #{updatedBy}
-            </if>
-            <if test="updatedTime != null">
-                and UPDATED_TIME = #{updatedTime}
-            </if>
-            <if test="spare1 != null and spare1 != ''">
-                and SPARE1 = #{spare1}
-            </if>
-            <if test="spare2 != null and spare2 != ''">
-                and SPARE2 = #{spare2}
-            </if>
-            <if test="spare3 != null and spare3 != ''">
-                and SPARE3 = #{spare3}
-            </if>
-        </where>
-    </select>
+<!--    <select id="queryAll" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3-->
+<!--        from shiyi.sys_product-->
+<!--        <where>-->
+<!--            <if test="id != null">-->
+<!--                and ID = #{id}-->
+<!--            </if>-->
+<!--            <if test="type != null">-->
+<!--                and TYPE = #{type}-->
+<!--            </if>-->
+<!--            <if test="price != null">-->
+<!--                and PRICE = #{price}-->
+<!--            </if>-->
+<!--            <if test="additionalPrice != null">-->
+<!--                and ADDITIONAL_PRICE = #{additionalPrice}-->
+<!--            </if>-->
+<!--            <if test="pic != null and pic != ''">-->
+<!--                and PIC = #{pic}-->
+<!--            </if>-->
+<!--            <if test="createdBy != null and createdBy != ''">-->
+<!--                and CREATED_BY = #{createdBy}-->
+<!--            </if>-->
+<!--            <if test="createdTime != null">-->
+<!--                and CREATED_TIME = #{createdTime}-->
+<!--            </if>-->
+<!--            <if test="updatedBy != null and updatedBy != ''">-->
+<!--                and UPDATED_BY = #{updatedBy}-->
+<!--            </if>-->
+<!--            <if test="updatedTime != null">-->
+<!--                and UPDATED_TIME = #{updatedTime}-->
+<!--            </if>-->
+<!--            <if test="spare1 != null and spare1 != ''">-->
+<!--                and SPARE1 = #{spare1}-->
+<!--            </if>-->
+<!--            <if test="spare2 != null and spare2 != ''">-->
+<!--                and SPARE2 = #{spare2}-->
+<!--            </if>-->
+<!--            <if test="spare3 != null and spare3 != ''">-->
+<!--                and SPARE3 = #{spare3}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
 
     <select id="queryByCondition" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -100,12 +100,9 @@
 <!--    </insert>-->
 
     <!--通过主键修改数据-->
-    <update id="update">
+    <update id="update" parameterType="com.ruoyi.system.domain.SysProduct">
         update shiyi.sys_product
         <set>
-            <if test="id != null">
-                ID = #{id},
-            </if>
             <if test="type != null">
                 TYPE = #{type},
             </if>
@@ -154,9 +151,6 @@
     <insert id="insertSelective" parameterType="com.ruoyi.system.domain.SysProduct">
         insert into sys_product
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                ID,
-            </if>
             <if test="type != null">
                 `TYPE`,
             </if>
@@ -192,8 +186,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=INTEGER},
+            <if test="name != null and name != ''">
+                #{name,jdbcType=VARCHAR},
             </if>
             <if test="type != null">
                 #{type,jdbcType=INTEGER},

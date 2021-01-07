@@ -93,7 +93,9 @@ public class SysMember implements Serializable {
      */
     private BigDecimal topUpAmount;
 
+    private Integer additional;
 
+    private Double sumOfExpenditure;
     /**
      * 会员对应的消费
      */

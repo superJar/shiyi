@@ -68,7 +68,7 @@ public class SysMemberServiceImpl implements SysMemberService {
 
     @Transactional
     @Override
-    public boolean topUp(SysMember member) {
+    public SysMember topUp(SysMember member) {
         //Amount from frontEnd
         BigDecimal topUpAmount = member.getTopUpAmount();
         float amount = topUpAmount.intValue();
@@ -90,9 +90,10 @@ public class SysMemberServiceImpl implements SysMemberService {
         memberFromDB.setSumOfTopUp(sumOfTopUpFromDB.add(topUpAmount));
 //        memberFromDB.setSumOfTopUp(memberFromDB.getSumOfTopUp() + topUpAmount.doubleValue());
         memberFromDB.setBalance(balanceFromDB.add(topUpAmount));
-        int count = sysMemberMapper.update(memberFromDB);
+        sysMemberMapper.update(memberFromDB);
 
-        return count > 0;
+        member.setAdditional(additional);
+        return member;
     }
 
 
@@ -103,7 +104,7 @@ public class SysMemberServiceImpl implements SysMemberService {
      */
     @Transactional
     @Override
-    public boolean consume(SysMember member) {
+    public SysMember consume(SysMember member) {
         //获取前端传的products并解析
         List<SysProduct> products = member.getProducts();
         if (CollectionUtils.isEmpty(products)) {
@@ -132,9 +133,10 @@ public class SysMemberServiceImpl implements SysMemberService {
         //拿附加余额抵扣
         memberFromDB = deductionFromBalance(sumOfExpenditure,balanceFromDB,extraBalanceFromDB,memberFromDB);
         memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() + sumOfExpenditure);
-        int count = sysMemberMapper.update(memberFromDB);
+        sysMemberMapper.update(memberFromDB);
 
-        return count > 0;
+        memberFromDB.setSumOfExpenditure(sumOfExpenditure);
+        return memberFromDB;
     }
 
     /**
@@ -233,6 +235,12 @@ public class SysMemberServiceImpl implements SysMemberService {
     @Override
     public void batchDelete(List<Integer> ids) {
         sysMemberMapper.batchDelete(ids);
+    }
+
+    @Transactional
+    @Override
+    public void batchAdd(List<SysMember> members) {
+        members.stream().forEach(member->sysMemberMapper.insertSelective(member));
     }
 
     /**

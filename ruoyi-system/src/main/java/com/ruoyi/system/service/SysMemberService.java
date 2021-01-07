@@ -16,10 +16,12 @@ public interface SysMemberService {
 
     Integer addOrEdit(SysMember member,String username);
 
-    boolean topUp(SysMember member);
+    SysMember topUp(SysMember member);
 
-    boolean consume(SysMember member);
+    SysMember consume(SysMember member);
 
 
     void batchDelete(List<Integer> ids);
+
+    void batchAdd(List<SysMember> members);
 }

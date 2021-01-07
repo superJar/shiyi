@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.Result;
 import com.ruoyi.common.utils.ServletUtils;
@@ -61,6 +62,7 @@ public class SysMemberController {
     }
 
     //分页查询
+    @Log
     @PreAuthorize("@ss.hasPermi('system:member:list')")
     @PostMapping("/list")
     public Result<PageInfo<SysMember>> page(@RequestBody JSONObject jsonObject) {
@@ -84,19 +86,18 @@ public class SysMemberController {
      * @date: 2021/1/1 17:39
      * @return: com.el.common.Result
      */
+    @Log
     @PreAuthorize("@ss.hasPermi('system:member:topup')")
     @PostMapping("/topUp")
-    public Result topUp(@RequestBody SysMember member) {
+    public Result<SysMember> topUp(@RequestBody SysMember member) {
 
 
         if (member == null || member.getId() == null) {
             return Result.fail();
         }
-        boolean flag = sysMemberService.topUp(member);
-        if(!flag){
-            return Result.fail();
-        }
-        return Result.ok();
+        SysMember sysMember = sysMemberService.topUp(member);
+
+        return Result.ok(sysMember);
 
     }
 
@@ -107,19 +108,17 @@ public class SysMemberController {
      * @date: 2021/1/1 17:40
      * @return: com.el.common.Result
      */
+    @Log
     @PreAuthorize("@ss.hasPermi('system:member:consume')")
     @PostMapping("/consume")
-    public Result consume(@RequestBody SysMember member) {
+    public Result<SysMember> consume(@RequestBody SysMember member) {
 
         if (member == null) {
             return Result.fail();
         }
-        boolean flag = sysMemberService.consume(member);
+        SysMember sysMember = sysMemberService.consume(member);
 
-        if(!flag){
-            return Result.fail();
-        }
-        return Result.ok();
+        return Result.ok(sysMember);
 
     }
 

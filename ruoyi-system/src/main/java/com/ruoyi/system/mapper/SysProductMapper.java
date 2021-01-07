@@ -21,5 +21,5 @@ public interface SysProductMapper {
 
     List<SysProduct> queryByCondition(@Param("queryString") String queryString);
 
-    void batchDelete(@Param("list") List<String> list);
+    void batchDelete(@Param("list") List<Integer> list);
 }

@@ -1,13 +1,14 @@
 package com.ruoyi.framework.web.service;
 
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Set;
 
 /**
  * RuoYi首创 自定义权限实现，ss取自SpringSecurity首字母
@@ -42,6 +43,7 @@ public class PermissionService
         {
             return false;
         }
+        // 获取本次请求里的请求头，解析请求头里的jwt获得redis里的token（uuid）和user
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         if (StringUtils.isNull(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions()))
         {

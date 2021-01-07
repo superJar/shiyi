@@ -22,5 +22,5 @@ public interface SysMemberMapper {
 
     SysMember queryById(@Param("id") Integer id);
 
-    void batchDelete(@Param("list") List<String> list);
+    void batchDelete(@Param("list") List<Integer> list);
 }

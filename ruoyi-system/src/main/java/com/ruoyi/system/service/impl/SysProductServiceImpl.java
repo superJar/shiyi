@@ -7,10 +7,12 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.system.domain.SysProduct;
 import com.ruoyi.system.mapper.SysProductMapper;
 import com.ruoyi.system.service.SysProductService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,21 +28,36 @@ public class SysProductServiceImpl implements SysProductService {
 
     @Transactional
     @Override
-    public Integer addOrEdit(SysProduct product) {
-        return product.getId() != null ? sysProductMapper.update(product) : sysProductMapper.insertSelective(product);
+    public Integer addOrEdit(SysProduct product,String username) {
+        return product.getId() != null ? update(product,username) : insert(product,username);
+    }
+
+    private Integer insert(SysProduct product, String username) {
+        product.setCreatedBy(username);
+        product.setCreatedTime(new Date());
+        return sysProductMapper.insertSelective(product);
+    }
+
+    private Integer update(SysProduct product,String username) {
+        product.setUpdatedBy(username);
+        product.setUpdatedTime(new Date());
+        return sysProductMapper.update(product);
     }
 
     @Override
     public PageInfo<SysProduct> page(int pageNum, int pageSize, String queryString) {
         Page<SysProduct> page = PageHelper.startPage(pageNum, pageSize);
-        List<SysProduct> list = sysProductMapper.queryByCondition("%"+queryString+"%");
+        if(StringUtils.isNotBlank(queryString)){
+            queryString = "%"+queryString+"%";
+        }
+        List<SysProduct> list = sysProductMapper.queryByCondition(queryString);
         PageInfo<SysProduct> pageInfo = page.toPageInfo();
         pageInfo.setList(list);
         return pageInfo;
     }
 
     @Override
-    public void batchDelete(List<String> ids) {
+    public void batchDelete(List<Integer> ids) {
         sysProductMapper.batchDelete(ids);
     }
 }

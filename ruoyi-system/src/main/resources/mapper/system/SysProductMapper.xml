@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.SysProduct">
         <!--@Table sys_product-->
         <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="name" column="NAME" jdbcType="VARCHAR"/>
         <result property="type" column="TYPE" jdbcType="INTEGER"/>
         <result property="price" column="PRICE" jdbcType="NUMERIC"/>
         <result property="additionalPrice" column="ADDITIONAL_PRICE" jdbcType="NUMERIC"/>
@@ -19,7 +20,7 @@
     </resultMap>
 
     <sql id="BASE_COLUMN">
-        ID, `TYPE`, PRICE,
+        ID, NAME, `TYPE`, PRICE,
       ADDITIONAL_PRICE, PIC, CREATED_BY,
       CREATED_TIME, UPDATED_BY, UPDATED_TIME,
       SPARE1, SPARE2, SPARE3
@@ -103,6 +104,9 @@
     <update id="update" parameterType="com.ruoyi.system.domain.SysProduct">
         update shiyi.sys_product
         <set>
+            <if test="name != null and name != ''">
+                NAME = #{name},
+            </if>
             <if test="type != null">
                 TYPE = #{type},
             </if>
@@ -114,12 +118,6 @@
             </if>
             <if test="pic != null and pic != ''">
                 PIC = #{pic},
-            </if>
-            <if test="createdBy != null and createdBy != ''">
-                CREATED_BY = #{createdBy},
-            </if>
-            <if test="createdTime != null">
-                CREATED_TIME = #{createdTime},
             </if>
             <if test="updatedBy != null and updatedBy != ''">
                 UPDATED_BY = #{updatedBy},
@@ -137,7 +135,7 @@
                 SPARE3 = #{spare3},
             </if>
         </set>
-        where  = ID #{id}
+        where  ID =  #{id}
     </update>
 
     <!--通过主键删除-->
@@ -151,6 +149,9 @@
     <insert id="insertSelective" parameterType="com.ruoyi.system.domain.SysProduct">
         insert into sys_product
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                NAME,
+            </if>
             <if test="type != null">
                 `TYPE`,
             </if>

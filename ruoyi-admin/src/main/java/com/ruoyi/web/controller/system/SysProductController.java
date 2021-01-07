@@ -4,7 +4,10 @@ package com.ruoyi.web.controller.system;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.Result;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysProduct;
 import com.ruoyi.system.service.SysProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,9 @@ public class SysProductController {
     @Resource
     private SysProductService sysProductService;
 
+    @Resource
+    private TokenService tokenService;
+
     /**
      * @description:新增/更新
      * @author: SuperJar
@@ -40,7 +46,12 @@ public class SysProductController {
     @PostMapping("/addOrUpdate")
     public Result addOrUpdate(@RequestBody SysProduct product){
         try {
-            sysProductService.addOrEdit(product);
+
+            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+            if(loginUser == null){
+                return Result.fail("用户为空！");
+            }
+            sysProductService.addOrEdit(product,loginUser.getUsername());
             return Result.ok();
         } catch (Exception e) {
             log.error("操作失败！{}", e.getMessage(), e);
@@ -73,7 +84,7 @@ public class SysProductController {
 
     @PreAuthorize("@ss.hasPermi('system:product:del')")
     @DeleteMapping("/batchDelete")
-    public Result batchDelete(@RequestBody List<String> ids){
+    public Result batchDelete(@RequestBody List<Integer> ids){
 
         try {
             sysProductService.batchDelete(ids);

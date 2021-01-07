@@ -14,12 +14,12 @@ import java.util.List;
 public interface SysMemberService {
     PageInfo<SysMember> page(Integer pageNum, Integer pageSize, String name, String nickname);
 
-    Integer addOrEdit(SysMember member);
+    Integer addOrEdit(SysMember member,String username);
 
     boolean topUp(SysMember member);
 
     boolean consume(SysMember member);
 
 
-    void batchDelete(List<String> ids);
+    void batchDelete(List<Integer> ids);
 }

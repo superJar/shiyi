@@ -3,7 +3,10 @@ package com.ruoyi.web.controller.system;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.Result;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysMember;
 import com.ruoyi.system.service.SysMemberService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,9 @@ public class SysMemberController {
     @Resource
     private SysMemberService sysMemberService;
 
+    @Resource
+    private TokenService tokenService;
+
 
     /**
      * @description:新增/更新
@@ -40,7 +46,8 @@ public class SysMemberController {
     @PostMapping("/addOrUpdate")
     public Result addOrUpdate(@RequestBody SysMember member) {
         try {
-            Integer count = sysMemberService.addOrEdit(member);
+            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+            Integer count = sysMemberService.addOrEdit(member,loginUser.getUsername());
 
             if (count == 0) {
                 return Result.fail("操作失败！");
@@ -81,19 +88,16 @@ public class SysMemberController {
     @PostMapping("/topUp")
     public Result topUp(@RequestBody SysMember member) {
 
-        try {
-            if (member == null || member.getId() == null) {
-                return Result.fail();
-            }
-            boolean flag = sysMemberService.topUp(member);
-            if(!flag){
-                return Result.fail();
-            }
-            return Result.ok();
-        } catch (Exception e) {
-            log.error("操作失败！{}", e.getMessage(), e);
-            return Result.fail("操作失败！");
+
+        if (member == null || member.getId() == null) {
+            return Result.fail();
         }
+        boolean flag = sysMemberService.topUp(member);
+        if(!flag){
+            return Result.fail();
+        }
+        return Result.ok();
+
     }
 
 
@@ -106,25 +110,22 @@ public class SysMemberController {
     @PreAuthorize("@ss.hasPermi('system:member:consume')")
     @PostMapping("/consume")
     public Result consume(@RequestBody SysMember member) {
-        try {
-            if (member == null) {
-                return Result.fail();
-            }
-            boolean flag = sysMemberService.consume(member);
 
-            if(!flag){
-                return Result.fail();
-            }
-            return Result.ok();
-        } catch (Exception e) {
-            log.error("操作失败！{}", e.getMessage(), e);
-            return Result.fail("操作失败！");
+        if (member == null) {
+            return Result.fail();
         }
+        boolean flag = sysMemberService.consume(member);
+
+        if(!flag){
+            return Result.fail();
+        }
+        return Result.ok();
+
     }
 
     @PreAuthorize("@ss.hasPermi('system:member:del')")
     @DeleteMapping("/batchDelete")
-    public Result batchDelete(@RequestBody List<String> ids){
+    public Result batchDelete(@RequestBody List<Integer> ids){
 
         try {
             sysMemberService.batchDelete(ids);

@@ -14,9 +14,9 @@ import java.util.List;
 public interface SysProductService {
 
 
-    Integer addOrEdit(SysProduct product);
+    Integer addOrEdit(SysProduct product,String username);
 
     PageInfo<SysProduct> page(int pageNum, int pageSize, String queryString);
 
-    void batchDelete(List<String> ids);
+    void batchDelete(List<Integer> ids);
 }

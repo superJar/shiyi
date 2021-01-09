@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -67,6 +68,7 @@ public class SysMember implements Serializable {
     /**
     * 创建时间
     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTime;
     /**
     * 更新人
@@ -75,6 +77,7 @@ public class SysMember implements Serializable {
     /**
     * 更新时间
     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedTime;
     /**
     * 备用字段1

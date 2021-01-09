@@ -1,10 +1,11 @@
 package com.ruoyi.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.io.Serializable;
 
 /**
  * 拾壹商品表 (SysProduct)实体类
@@ -46,6 +47,7 @@ public class SysProduct implements Serializable {
     /**
     * 创建时间
     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTime;
     /**
     * 更新人
@@ -54,6 +56,7 @@ public class SysProduct implements Serializable {
     /**
     * 更新时间
     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedTime;
     /**
     * 备用字段1

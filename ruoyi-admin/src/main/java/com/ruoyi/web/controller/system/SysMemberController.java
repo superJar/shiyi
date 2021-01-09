@@ -79,7 +79,7 @@ public class SysMemberController extends BaseController {
      */
     @Log
     @PreAuthorize("@ss.hasPermi('system:member:topup')")
-    @PostMapping("/topUp")
+    @PutMapping("/topUp")
     public Result<SysMember> topUp(@RequestBody SysMember member) {
 
 
@@ -103,7 +103,7 @@ public class SysMemberController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('system:member:consume')")
-    @PostMapping("/deduction")
+    @PutMapping("/deduction")
     public void deduction(@RequestBody SysMember member){
         if(member == null){
             throw new RuntimeException("参数为空！");

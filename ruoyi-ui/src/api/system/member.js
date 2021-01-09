@@ -11,9 +11,9 @@ export function listMember(query) {
 }
 
 // 查询用户详细
-export function getUser(userId) {
+export function getMember(userId) {
   return request({
-    url: '/system/user/' + praseStrEmpty(userId),
+    url: '/system/member/echo/' + praseStrEmpty(userId),
     method: 'get'
   })
 }
@@ -123,5 +123,32 @@ export function importTemplate() {
   return request({
     url: '/system/user/importTemplate',
     method: 'get'
+  })
+}
+
+
+// 充值
+export function topUp(id, topUpAmount) {
+  const data = {
+    id,
+    topUpAmount
+  }
+  return request({
+    url: '/system/member/topUp',
+    method: 'put',
+    data: data
+  })
+}
+
+// 消费
+export function consume(id, sumOfExpenditure) {
+  const data = {
+    id,
+    sumOfExpenditure
+  }
+  return request({
+    url: '/system/member/deduction',
+    method: 'put',
+    data: data
   })
 }

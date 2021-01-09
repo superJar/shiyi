@@ -47,7 +47,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasPermi="['system:user:add']"
+              v-hasPermi="['system:member:save']"
             >新增</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -57,7 +57,7 @@
               size="mini"
               :disabled="single"
               @click="handleUpdate"
-              v-hasPermi="['system:user:edit']"
+              v-hasPermi="['system:member:save']"
             >修改</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -96,6 +96,7 @@
           <el-table-column label="用户名称" align="center" prop="name" :show-overflow-tooltip="true" />
           <el-table-column label="用户昵称" align="center" prop="nickname" :show-overflow-tooltip="true" />
           <el-table-column label="余额" align="center" prop="balance" />
+          <el-table-column label="赠送余额" align="center" prop="additionalBalance" />
           <el-table-column label="充值总计" align="center" prop="sumOfTopUp" />
           <el-table-column label="消费总计" align="center" prop="sumOfConsumption" />
           <el-table-column label="手机号码" align="center" prop="phone" width="120" />
@@ -115,24 +116,17 @@
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
-              >修改</el-button>
+                @click="topUp(scope.row)"
+                v-hasPermi="['system:member:topup']"
+              >充值</el-button>
               <el-button
                 v-if="scope.row.userId !== 1"
                 size="mini"
                 type="text"
                 icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
-              >删除</el-button>
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-key"
-                @click="handleResetPwd(scope.row)"
-                v-hasPermi="['system:user:resetPwd']"
-              >重置</el-button>
+                @click="consume(scope.row)"
+                v-hasPermi="['system:member:consume']"
+              >消费</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -264,7 +258,7 @@
 </template>
 
 <script>
-import { listMember, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/member";
+import { listMember, getMember, delUser,topUp,consume, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/member";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -472,7 +466,7 @@ export default {
     handleAdd() {
       this.reset();
       this.getTreeselect();
-      getUser().then(response => {
+      getMember().then(response => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         this.open = true;
@@ -480,19 +474,44 @@ export default {
         this.form.password = this.initPassword;
       });
     },
+    /** 充值按钮操作 */
+    topUp(row) {
+          this.$prompt('请输入"' + row.name + '"的充值金额', "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消"
+          }).then(({ value }) => {
+              topUp(row.id, value).then(response => {
+                this.msgSuccess("充值成功");
+                this.getList();
+              });
+            }).catch(() => {});
+        },
+
+        /** 消费按钮操作 */
+            consume(row) {
+                  this.$prompt('请输入"' + row.name + '"的消费金额', "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消"
+                  }).then(({ value }) => {
+                      consume(row.id, value).then(response => {
+                        this.msgSuccess("保存消费金额成功");
+                        this.getList();
+                      });
+                    }).catch(() => {});
+                },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       this.getTreeselect();
-      const userId = row.userId || this.ids;
-      getUser(userId).then(response => {
+      const userId = row.cardNum || this.ids;
+      getMember(userId).then(response => {
         this.form = response.data;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         this.form.postIds = response.postIds;
         this.form.roleIds = response.roleIds;
         this.open = true;
-        this.title = "修改用户";
+        this.title = "修改会员信息";
         this.form.password = "";
       });
     },

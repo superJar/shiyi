@@ -36,8 +36,8 @@ public class SysMemberServiceImpl implements SysMemberService {
     }
 
     @Override
-    public Integer addOrEdit(SysMember member,String username) {
-        return member.getId() == null ? insert(member,username) : update(member,username);
+    public Integer addOrEdit(SysMember member, String username) {
+        return member.getId() == null ? insert(member, username) : update(member, username);
     }
 
     private Integer update(SysMember member, String username) {
@@ -61,16 +61,25 @@ public class SysMemberServiceImpl implements SysMemberService {
 
         //obj from db
         SysMember memberFromDB = sysMemberMapper.queryById(member.getId());
-        BigDecimal sumOfTopUpFromDB = memberFromDB.getSumOfTopUp();
+        BigDecimal sumOfTopUpFromDB = new BigDecimal(0);
+        if (memberFromDB.getSumOfTopUp() != null) {
+            sumOfTopUpFromDB = memberFromDB.getSumOfTopUp();
+        }
+        BigDecimal balanceFromDB = new BigDecimal(0);
+        if (memberFromDB.getBalance() != null) {
+            balanceFromDB = memberFromDB.getBalance();
+        }
 //        Double sumOfTopUpFromDB = memberFromDB.getSumOfTopUp();
-        BigDecimal balanceFromDB = memberFromDB.getBalance();
-        BigDecimal additionalBalanceFromDB = memberFromDB.getAdditionalBalance();
+        BigDecimal additionalBalanceFromDB = new BigDecimal(0);
+        if (memberFromDB.getAdditionalBalance() != null) {
+            additionalBalanceFromDB = memberFromDB.getAdditionalBalance();
+        }
 
         //充值总额
         //充值余额增加
         //附加充值余额增加
         Integer additional = 0;
-        additional = this.getAdditionalAmount(additional,amount);
+        additional = this.getAdditionalAmount(additional, amount);
 
 
         memberFromDB.setAdditionalBalance(additionalBalanceFromDB.add(new BigDecimal(additional)));
@@ -79,13 +88,16 @@ public class SysMemberServiceImpl implements SysMemberService {
         memberFromDB.setBalance(balanceFromDB.add(topUpAmount));
         sysMemberMapper.update(memberFromDB);
 
-        member.setAdditional(additional);
+        if (additional != null) {
+            member.setAdditional(additional);
+        }
         return member;
     }
 
 
     /**
      * 消费
+     *
      * @param member
      * @return
      */
@@ -99,10 +111,16 @@ public class SysMemberServiceImpl implements SysMemberService {
         }
         //找到数据库里的member
         SysMember memberFromDB = sysMemberMapper.queryById(member.getId());
-        float extraBalanceFromDB = memberFromDB.getAdditionalBalance().floatValue();
-        float balanceFromDB = memberFromDB.getBalance().floatValue();
+        float extraBalanceFromDB = 0;
+        if (memberFromDB.getAdditionalBalance() != null) {
+            extraBalanceFromDB = memberFromDB.getAdditionalBalance().floatValue();
+        }
+        float balanceFromDB = 0;
+        if (memberFromDB.getBalance() != null){
+            balanceFromDB = memberFromDB.getBalance().floatValue();
+        }
 
-        if(memberFromDB.getAdditionalBalance().intValue() == 0 && memberFromDB.getBalance().intValue() == 0){
+        if (memberFromDB.getAdditionalBalance().intValue() == 0 && memberFromDB.getBalance().intValue() == 0) {
             throw new RuntimeException("该用户已经没钱扣了！");
         }
 
@@ -110,15 +128,15 @@ public class SysMemberServiceImpl implements SysMemberService {
         double sumOfExpenditure = sumOfExpenditure(products);
 
         // 本次消费不够扣，需要返回错误信息给前端
-        if((extraBalanceFromDB + balanceFromDB) < sumOfExpenditure){
+        if ((extraBalanceFromDB + balanceFromDB) < sumOfExpenditure) {
             throw new RuntimeException("该会员目前的余额不足以扣除本次消费，" +
                     "扣除完余额后还需要支付："
-                    +((extraBalanceFromDB + balanceFromDB) - sumOfExpenditure)
-                    +"元");
+                    + ((extraBalanceFromDB + balanceFromDB) - sumOfExpenditure)
+                    + "元");
         }
 
         //拿附加余额抵扣
-        memberFromDB = deductionFromBalance(sumOfExpenditure,balanceFromDB,extraBalanceFromDB,memberFromDB);
+        memberFromDB = deductionFromBalance(sumOfExpenditure, balanceFromDB, extraBalanceFromDB, memberFromDB);
         memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() + sumOfExpenditure);
         sysMemberMapper.update(memberFromDB);
 
@@ -128,6 +146,7 @@ public class SysMemberServiceImpl implements SysMemberService {
 
     /**
      * 扣除余额
+     *
      * @param sumOfExpenditure
      * @param balanceFromDB
      * @param extraBalanceFromDB
@@ -135,18 +154,18 @@ public class SysMemberServiceImpl implements SysMemberService {
      * @return
      */
     private SysMember deductionFromBalance(double sumOfExpenditure, float balanceFromDB, float extraBalanceFromDB, SysMember memberFromDB) {
-        if(extraBalanceFromDB > 0){
-            if(sumOfExpenditure > extraBalanceFromDB){
+        if (extraBalanceFromDB > 0) {
+            if (sumOfExpenditure > extraBalanceFromDB) {
                 //如果附加余额不够抵扣本次消费
                 sumOfExpenditure -= extraBalanceFromDB;
                 balanceFromDB -= sumOfExpenditure;
                 memberFromDB.setBalance(new BigDecimal(balanceFromDB));
                 memberFromDB.setAdditionalBalance(new BigDecimal(0));
-            }else{
+            } else {
                 extraBalanceFromDB -= sumOfExpenditure;
                 memberFromDB.setAdditionalBalance(new BigDecimal(extraBalanceFromDB));
             }
-        }else{
+        } else {
             balanceFromDB -= sumOfExpenditure;
             memberFromDB.setBalance(new BigDecimal(balanceFromDB));
         }
@@ -155,10 +174,11 @@ public class SysMemberServiceImpl implements SysMemberService {
 
     /**
      * 算出本次消费金额总额
+     *
      * @param products
      * @return
      */
-    private Double sumOfExpenditure(List<SysProduct> products){
+    private Double sumOfExpenditure(List<SysProduct> products) {
         DoubleSummaryStatistics sum = products.stream().collect(Collectors.summarizingDouble(
                 product -> {
                     LocalDateTime now = LocalDateTime.now();
@@ -166,22 +186,22 @@ public class SysMemberServiceImpl implements SysMemberService {
                     int hour = now.getHour();
                     double finalPrice;
                     // 狼人杀：
-                    if(product.getName().equals(WOLF_KILL)){
+                    if (product.getName().equals(WOLF_KILL)) {
                         double price = product.getPrice().doubleValue();
                         double additionalPrice = product.getAdditionalPrice().doubleValue();
 
                         // 周五到周日：平时65，超过2点85/人
-                        if(isWeekend(week)){
-                            if(isMidNight(hour)){
+                        if (isWeekend(week)) {
+                            if (isMidNight(hour)) {
                                 finalPrice = price + additionalPrice + 20;
-                            }else{
+                            } else {
                                 finalPrice = price + 20;
                             }
-                        }else{
+                        } else {
                             // 周一到周四：平时45，超过凌晨2点65/人
-                            if(isMidNight(hour)){
-                                finalPrice = price + additionalPrice ;
-                            }else{
+                            if (isMidNight(hour)) {
+                                finalPrice = price + additionalPrice;
+                            } else {
                                 finalPrice = price;
                             }
                         }
@@ -189,10 +209,10 @@ public class SysMemberServiceImpl implements SysMemberService {
                     }
 
                     // 包房：
-                    if(product.getName().contains(ROOM)){
-                        if(isWeekend(week)){
+                    if (product.getName().contains(ROOM)) {
+                        if (isWeekend(week)) {
                             finalPrice = product.getAdditionalPrice().doubleValue();
-                        }else{
+                        } else {
                             finalPrice = product.getPrice().doubleValue();
                         }
                         return finalPrice;
@@ -208,6 +228,7 @@ public class SysMemberServiceImpl implements SysMemberService {
 
     /**
      * 是否超过凌晨2点
+     *
      * @param hour
      * @return
      */
@@ -217,6 +238,7 @@ public class SysMemberServiceImpl implements SysMemberService {
 
     /**
      * 批量删除
+     *
      * @param ids
      */
     @Override
@@ -227,7 +249,7 @@ public class SysMemberServiceImpl implements SysMemberService {
     @Transactional
     @Override
     public void batchAdd(List<SysMember> members) {
-        members.stream().forEach(member->sysMemberMapper.insertSelective(member));
+        members.stream().forEach(member -> sysMemberMapper.insertSelective(member));
     }
 
     @Override
@@ -244,31 +266,36 @@ public class SysMemberServiceImpl implements SysMemberService {
 
         float totalBalance = memberFromDB.getBalance().add(memberFromDB.getAdditionalBalance()).floatValue();
 
-        if(sumOfExpenditure > totalBalance){
+        if (sumOfExpenditure > totalBalance) {
             throw new RuntimeException("里面不够钱扣了！");
         }
 
-        memberFromDB = deductionFromBalance(sumOfExpenditure,memberFromDB.getBalance().floatValue(),memberFromDB.getAdditionalBalance().floatValue(),memberFromDB);
+        memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), memberFromDB.getAdditionalBalance().floatValue(), memberFromDB);
+
+        memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() == 0 ? sumOfExpenditure : memberFromDB.getSumOfConsumption() + sumOfExpenditure);
 
         sysMemberMapper.update(memberFromDB);
     }
 
     /**
      * 是否周末
+     *
      * @param week
      * @return
      */
-    private boolean isWeekend(int week){
+    private boolean isWeekend(int week) {
         return week >= 5 && week <= 7;
     }
+
     /**
      * 获取所有充值金额
+     *
      * @param additional
      * @param amount
      * @return
      */
     private Integer getAdditionalAmount(Integer additional, float amount) {
-        if(amount < 500){
+        if (amount < 500) {
             return additional;
         }
 
@@ -282,7 +309,7 @@ public class SysMemberServiceImpl implements SysMemberService {
             additional += 700;
             //充值金额大于3500，需要拆分
             amount -= 3000;
-            additional = getAdditionalAmount(additional,amount);
+            additional = getAdditionalAmount(additional, amount);
         }
         return additional;
     }

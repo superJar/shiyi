@@ -1,37 +1,27 @@
 <template>
   <div class="app-container">
-      <!--用户数据-->
+      <!--商品数据-->
         <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="商品名称" prop="name">
             <el-input
-              v-model="queryParams.userName"
-              placeholder="请输入用户名称"
+              v-model="queryParams.name"
+              placeholder="请输入商品名称"
               clearable
               size="small"
               style="width: 240px"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="手机号码" prop="phonenumber">
-            <el-input
-              v-model="queryParams.phonenumber"
-              placeholder="请输入手机号码"
-              clearable
-              size="small"
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
+          <el-form-item label="商品类别" prop="type">
             <el-select
-              v-model="queryParams.status"
-              placeholder="用户状态"
+              v-model="queryParams.type"
+              placeholder="商品类别"
               clearable
               size="small"
               style="width: 240px"
             >
               <el-option
-                v-for="dict in statusOptions"
+                v-for="dict in productOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
@@ -106,25 +96,15 @@
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
-        <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange" width="100">
+        <el-table v-loading="loading" :data="productList" @selection-change="handleSelectionChange" width="100">
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="用户编号" align="center" prop="userId" />
-          <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true" />
-          <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
-          <el-table-column label="手机号码" align="center" prop="phonenumber" width="120" />
-          <el-table-column label="状态" align="center">
+          <el-table-column label="商品名称" align="center" prop="name" />
+          <el-table-column label="商品类别" :formatter="statusFormat" align="center" prop="type" />
+          <el-table-column label="单价" align="center" prop="price" />
+          <el-table-column label="附加价格" align="center" prop="additionalPrice"/>
+          <el-table-column label="创建时间" align="center" prop="createdTime" width="160">
             <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="160">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
+              <span>{{ parseTime(scope.row.createdTime) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -287,7 +267,7 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/user";
+import { listProduct, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/product";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -310,8 +290,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 用户表格数据
-      userList: null,
+      // 商品表格数据
+      productList: null,
       // 弹出层标题
       title: "",
       // 部门树选项
@@ -328,6 +308,8 @@ export default {
       statusOptions: [],
       // 性别状态字典
       sexOptions: [],
+      // 商品类型字典
+      productOptions: [],
       // 岗位选项
       postOptions: [],
       // 角色选项
@@ -402,6 +384,9 @@ export default {
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
+    this.getDicts("sys_product").then(response => {
+          this.productOptions = response.data;
+        });
     this.getDicts("sys_user_sex").then(response => {
       this.sexOptions = response.data;
     });
@@ -413,8 +398,8 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.userList = response.rows;
+      listProduct(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          this.productList = response.rows;
           this.total = response.total;
           this.loading = false;
         }
@@ -451,6 +436,12 @@ export default {
           row.status = row.status === "0" ? "1" : "0";
         });
     },
+    statusFormat(row, column) {
+          if (row.menuType == "F") {
+            return "";
+          }
+          return this.selectDictLabel(this.productOptions, row.type);
+        },
     // 取消按钮
     cancel() {
       this.open = false;

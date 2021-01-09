@@ -93,7 +93,7 @@
         from sys_product
         <where>
             <if test="name != null and name != ''">
-                NAME like #{name}
+                NAME like concat('%',#{name},'%')
             </if>
             <if test="type != null">
                 and TYPE = #{type}

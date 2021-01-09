@@ -65,8 +65,8 @@ public class SysProductController extends BaseController {
      * @return: com.el.common.Result<com.baomidou.mybatisplus.core.metadata.IPage<com.el.entity.ElProduct>>
      */
     @PreAuthorize("@ss.hasPermi('system:product:list')")
-    @PostMapping("/list")
-    public TableDataInfo list(@RequestBody SysProduct product){
+    @GetMapping("/list")
+    public TableDataInfo list(SysProduct product){
             startPage();
             List<SysProduct> list = sysProductService.list(product);
             return getDataTable(list);

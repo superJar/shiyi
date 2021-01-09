@@ -2,9 +2,9 @@
   <div class="app-container">
       <!--用户数据-->
         <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="用户名称" prop="name">
             <el-input
-              v-model="queryParams.userName"
+              v-model="queryParams.name"
               placeholder="请输入用户名称"
               clearable
               size="small"
@@ -12,31 +12,15 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="手机号码" prop="phonenumber">
+          <el-form-item label="手机号码" prop="phone">
             <el-input
-              v-model="queryParams.phonenumber"
+              v-model="queryParams.phone"
               placeholder="请输入手机号码"
               clearable
               size="small"
               style="width: 240px"
               @keyup.enter.native="handleQuery"
             />
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              placeholder="用户状态"
-              clearable
-              size="small"
-              style="width: 240px"
-            >
-              <el-option
-                v-for="dict in statusOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
           </el-form-item>
           <el-form-item label="创建时间">
             <el-date-picker
@@ -108,25 +92,18 @@
         </el-row>
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange" width="100">
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="用户编号" align="center" prop="userId" />
-          <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true" />
-          <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
-          <el-table-column label="手机号码" align="center" prop="phonenumber" width="120" />
-          <el-table-column label="状态" align="center">
+          <el-table-column label="用户编号" align="center" prop="cardNum" />
+          <el-table-column label="用户名称" align="center" prop="name" :show-overflow-tooltip="true" />
+          <el-table-column label="用户昵称" align="center" prop="nickname" :show-overflow-tooltip="true" />
+          <el-table-column label="余额" align="center" prop="balance" />
+          <el-table-column label="充值总计" align="center" prop="sumOfTopUp" />
+          <el-table-column label="消费总计" align="center" prop="sumOfConsumption" />
+          <el-table-column label="手机号码" align="center" prop="phone" width="120" />
+          <el-table-column label="创建时间" align="center" prop="createdTime" width="160">
             <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
+              <span>{{ parseTime(scope.row.createdTime) }}</span>
             </template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="160">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
-            </template>
-          </el-table-column>
+           </el-table-column>
           <el-table-column
             label="操作"
             align="center"
@@ -287,7 +264,7 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/user";
+import { listMember, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/member";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -413,19 +390,19 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listMember(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
           this.userList = response.rows;
           this.total = response.total;
           this.loading = false;
         }
       );
     },
-    /** 查询部门下拉树结构 */
-    getTreeselect() {
-      treeselect().then(response => {
-        this.deptOptions = response.data;
-      });
-    },
+     /** 查询部门下拉树结构 */
+        getTreeselect() {
+          treeselect().then(response => {
+            this.deptOptions = response.data;
+          });
+        },
     // 筛选节点
     filterNode(value, data) {
       if (!value) return true;

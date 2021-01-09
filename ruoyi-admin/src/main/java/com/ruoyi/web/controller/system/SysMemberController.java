@@ -64,8 +64,8 @@ public class SysMemberController extends BaseController {
     //分页查询
     @Log
     @PreAuthorize("@ss.hasPermi('system:member:list')")
-    @PostMapping("/list")
-    public TableDataInfo page(@RequestBody SysMember member) {
+    @GetMapping("/list")
+    public TableDataInfo page(SysMember member) {
         startPage();
         List<SysMember> list = sysMemberService.page(member);
         return getDataTable(list);

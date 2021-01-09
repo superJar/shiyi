@@ -92,6 +92,16 @@ public class SysMemberController extends BaseController {
 
     }
 
+    @PreAuthorize("@ss.hasPermi('system:member:save')")
+    @GetMapping("/echo")
+    public SysMember echo(Integer id){
+        if(id == null){
+            throw new RuntimeException("id不能为空！;");
+        }
+        SysMember member = sysMemberService.echo(id);
+        return member;
+    }
+
 
     /**
      * @description:消费

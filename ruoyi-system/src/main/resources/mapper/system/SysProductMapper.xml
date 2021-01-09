@@ -27,12 +27,12 @@
     </sql>
 
     <!--查询单个-->
-<!--    <select id="queryById" resultMap="BaseResultMap">-->
-<!--        select-->
-<!--          ID, TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3-->
-<!--        from shiyi.sys_product-->
-<!--        where  = #{}-->
-<!--    </select>-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          ID, NAME,TYPE, PRICE, ADDITIONAL_PRICE, PIC, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
+        from shiyi.sys_product
+        where ID = #{id}
+    </select>
 
     <!--查询指定行数据-->
 <!--    <select id="queryAllByLimit" resultMap="BaseResultMap">-->

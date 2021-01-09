@@ -84,4 +84,14 @@ public class SysProductController extends BaseController {
             return Result.fail("操作失败！");
         }
     }
+
+    @PreAuthorize("@ss.hasPermi('system:product:save')")
+    @GetMapping("/echo")
+    public SysProduct echo(Integer id){
+        if(id == null){
+            throw new RuntimeException("id不能为空！;");
+        }
+        SysProduct product = sysProductService.echo(id);
+        return product;
+    }
 }

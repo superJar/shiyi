@@ -1,14 +1,10 @@
 package com.ruoyi.system.service.impl;
 
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.system.domain.SysMember;
 import com.ruoyi.system.domain.SysProduct;
 import com.ruoyi.system.mapper.SysMemberMapper;
 import com.ruoyi.system.service.SysMemberService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -231,6 +227,11 @@ public class SysMemberServiceImpl implements SysMemberService {
     @Override
     public void batchAdd(List<SysMember> members) {
         members.stream().forEach(member->sysMemberMapper.insertSelective(member));
+    }
+
+    @Override
+    public SysMember echo(Integer id) {
+        return sysMemberMapper.queryById(id);
     }
 
     /**

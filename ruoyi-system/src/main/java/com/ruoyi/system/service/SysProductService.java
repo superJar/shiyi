@@ -18,4 +18,6 @@ public interface SysProductService {
     List<SysProduct> list(SysProduct product);
 
     void batchDelete(List<Integer> ids);
+
+    SysProduct echo(Integer id);
 }

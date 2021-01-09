@@ -49,4 +49,9 @@ public class SysProductServiceImpl implements SysProductService {
     public void batchDelete(List<Integer> ids) {
         sysProductMapper.batchDelete(ids);
     }
+
+    @Override
+    public SysProduct echo(Integer id) {
+        return sysProductMapper.queryById(id);
+    }
 }

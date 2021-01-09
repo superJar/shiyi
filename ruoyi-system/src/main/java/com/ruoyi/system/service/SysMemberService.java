@@ -23,4 +23,6 @@ public interface SysMemberService {
     void batchDelete(List<Integer> ids);
 
     void batchAdd(List<SysMember> members);
+
+    SysMember echo(Integer id);
 }

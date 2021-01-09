@@ -25,4 +25,6 @@ public interface SysMemberService {
     void batchAdd(List<SysMember> members);
 
     SysMember echo(Integer id);
+
+    void deduction(SysMember member);
 }

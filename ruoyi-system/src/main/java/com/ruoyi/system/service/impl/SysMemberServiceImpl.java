@@ -234,6 +234,24 @@ public class SysMemberServiceImpl implements SysMemberService {
         return sysMemberMapper.queryById(id);
     }
 
+    @Transactional
+    @Override
+    public void deduction(SysMember member) {
+        SysMember memberFromDB = sysMemberMapper.queryById(member.getId());
+
+        Double sumOfExpenditure = member.getSumOfExpenditure();
+
+        float totalBalance = memberFromDB.getBalance().add(memberFromDB.getAdditionalBalance()).floatValue();
+
+        if(sumOfExpenditure > totalBalance){
+            throw new RuntimeException("里面不够钱扣了！");
+        }
+
+        memberFromDB = deductionFromBalance(sumOfExpenditure,memberFromDB.getBalance().floatValue(),memberFromDB.getAdditionalBalance().floatValue(),memberFromDB);
+
+        sysMemberMapper.update(memberFromDB);
+    }
+
     /**
      * 是否周末
      * @param week

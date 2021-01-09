@@ -102,6 +102,16 @@ public class SysMemberController extends BaseController {
         return member;
     }
 
+    @PreAuthorize("@ss.hasPermi('system:member:consume')")
+    @PostMapping("/deduction")
+    public void deduction(@RequestBody SysMember member){
+        if(member == null){
+            throw new RuntimeException("参数为空！");
+        }
+        sysMemberService.deduction(member);
+    }
+
+
 
     /**
      * @description:消费

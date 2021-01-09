@@ -61,18 +61,18 @@ public class SysMemberServiceImpl implements SysMemberService {
 
         //obj from db
         SysMember memberFromDB = sysMemberMapper.queryById(member.getId());
-        BigDecimal sumOfTopUpFromDB = new BigDecimal(0);
+        double sumOfTopUpFromDB = 0;
         if (memberFromDB.getSumOfTopUp() != null) {
-            sumOfTopUpFromDB = memberFromDB.getSumOfTopUp();
+            sumOfTopUpFromDB = memberFromDB.getSumOfTopUp().doubleValue();
         }
-        BigDecimal balanceFromDB = new BigDecimal(0);
+        double balanceFromDB = 0;
         if (memberFromDB.getBalance() != null) {
-            balanceFromDB = memberFromDB.getBalance();
+            balanceFromDB = memberFromDB.getBalance().doubleValue();
         }
 //        Double sumOfTopUpFromDB = memberFromDB.getSumOfTopUp();
-        BigDecimal additionalBalanceFromDB = new BigDecimal(0);
+        double additionalBalanceFromDB = 0;
         if (memberFromDB.getAdditionalBalance() != null) {
-            additionalBalanceFromDB = memberFromDB.getAdditionalBalance();
+            additionalBalanceFromDB = memberFromDB.getAdditionalBalance().doubleValue();
         }
 
         //充值总额
@@ -82,15 +82,15 @@ public class SysMemberServiceImpl implements SysMemberService {
         additional = this.getAdditionalAmount(additional, amount);
 
 
-        memberFromDB.setAdditionalBalance(additionalBalanceFromDB.add(new BigDecimal(additional)));
-        memberFromDB.setSumOfTopUp(sumOfTopUpFromDB.add(topUpAmount));
+        memberFromDB.setAdditionalBalance((new BigDecimal(additionalBalanceFromDB + additional)));
+        memberFromDB.setSumOfTopUp(topUpAmount.add(new BigDecimal(sumOfTopUpFromDB)));
 //        memberFromDB.setSumOfTopUp(memberFromDB.getSumOfTopUp() + topUpAmount.doubleValue());
-        memberFromDB.setBalance(balanceFromDB.add(topUpAmount));
+        memberFromDB.setBalance(topUpAmount.add(new BigDecimal(balanceFromDB)));
         sysMemberMapper.update(memberFromDB);
 
-        if (additional != null) {
-            member.setAdditional(additional);
-        }
+//        if (additional != 0) {
+//            member.setAdditional(additional);
+//        }
         return member;
     }
 
@@ -154,20 +154,20 @@ public class SysMemberServiceImpl implements SysMemberService {
      * @return
      */
     private SysMember deductionFromBalance(double sumOfExpenditure, float balanceFromDB, float extraBalanceFromDB, SysMember memberFromDB) {
-        if (extraBalanceFromDB > 0) {
-            if (sumOfExpenditure > extraBalanceFromDB) {
+        if (balanceFromDB > 0) {
+            if (sumOfExpenditure > balanceFromDB) {
                 //如果附加余额不够抵扣本次消费
-                sumOfExpenditure -= extraBalanceFromDB;
+                sumOfExpenditure -= balanceFromDB;
+                extraBalanceFromDB -= sumOfExpenditure;
+                memberFromDB.setBalance(new BigDecimal(0));
+                memberFromDB.setAdditionalBalance(new BigDecimal(extraBalanceFromDB));
+            } else {
                 balanceFromDB -= sumOfExpenditure;
                 memberFromDB.setBalance(new BigDecimal(balanceFromDB));
-                memberFromDB.setAdditionalBalance(new BigDecimal(0));
-            } else {
-                extraBalanceFromDB -= sumOfExpenditure;
-                memberFromDB.setAdditionalBalance(new BigDecimal(extraBalanceFromDB));
             }
         } else {
-            balanceFromDB -= sumOfExpenditure;
-            memberFromDB.setBalance(new BigDecimal(balanceFromDB));
+            extraBalanceFromDB -= sumOfExpenditure;
+            memberFromDB.setAdditionalBalance(new BigDecimal(extraBalanceFromDB));
         }
         return memberFromDB;
     }
@@ -271,8 +271,11 @@ public class SysMemberServiceImpl implements SysMemberService {
         }
 
         memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), memberFromDB.getAdditionalBalance().floatValue(), memberFromDB);
-
-        memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() == 0 ? sumOfExpenditure : memberFromDB.getSumOfConsumption() + sumOfExpenditure);
+        if(memberFromDB.getSumOfConsumption() != 0){
+            memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() + sumOfExpenditure);
+        }else{
+            memberFromDB.setSumOfConsumption(sumOfExpenditure);
+        }
 
         sysMemberMapper.update(memberFromDB);
     }

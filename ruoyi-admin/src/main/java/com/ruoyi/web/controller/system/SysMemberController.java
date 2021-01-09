@@ -93,12 +93,13 @@ public class SysMemberController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('system:member:save')")
-    @GetMapping("/echo")
-    public SysMember echo(Long id){
-        if(id == null){
-            throw new RuntimeException("id不能为空！");
+    @GetMapping(value = { "/", "/{userId}" })
+    public SysMember echo(@PathVariable(value = "userId", required = false) Long userId){
+        if(userId == null){
+//            throw new RuntimeException("id不能为空！");
+            return null;
         }
-        SysMember member = sysMemberService.echo(id);
+        SysMember member = sysMemberService.echo(userId);
         return member;
     }
 

@@ -490,7 +490,7 @@ export default {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         this.open = true;
-        this.title = "添加用户";
+        this.title = "添加商品";
         this.form.password = this.initPassword;
       });
     },

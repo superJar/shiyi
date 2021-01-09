@@ -13,7 +13,7 @@ export function listMember(query) {
 // 查询用户详细
 export function getMember(userId) {
   return request({
-    url: '/system/member/echo/' + praseStrEmpty(userId),
+    url: '/system/member/' + praseStrEmpty(userId),
     method: 'get'
   })
 }
@@ -21,7 +21,7 @@ export function getMember(userId) {
 // 新增用户
 export function addUser(data) {
   return request({
-    url: '/system/user',
+    url: '/system/member/addOrUpdate',
     method: 'post',
     data: data
   })
@@ -30,8 +30,8 @@ export function addUser(data) {
 // 修改用户
 export function updateUser(data) {
   return request({
-    url: '/system/user',
-    method: 'put',
+    url: '/system/member/addOrUpdate',
+    method: 'post',
     data: data
   })
 }

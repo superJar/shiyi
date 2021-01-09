@@ -143,72 +143,28 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="用户昵称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
+            <el-form-item label="用户编号" prop="cardNum">
+              <el-input v-model="form.cardNum" placeholder="请输入用户编号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-                      <el-form-item label="角色">
-                        <el-select v-model="form.roleIds" multiple placeholder="请选择">
-                          <el-option
-                            v-for="item in roleOptions"
-                            :key="item.roleId"
-                            :label="item.roleName"
-                            :value="item.roleId"
-                            :disabled="item.status == 1"
-                          ></el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
+            <el-form-item label="用户姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入用户姓名" />
+              </el-form-item>
+          </el-col>
+
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="手机号码" prop="phonenumber">
-              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" />
+         <el-col :span="12">
+           <el-form-item label="用户昵称" prop="nickname">
+           <el-input v-model="form.nickname" placeholder="请输入用户昵称" />
+           </el-form-item>
+         </el-col>
+         <el-col :span="12">
+            <el-form-item label="手机号码" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号码" />
             </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户名称" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入用户名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入用户密码" type="password" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="用户性别">
-              <el-select v-model="form.sex" placeholder="请选择">
-                <el-option
-                  v-for="dict in sexOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
+         </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -329,7 +285,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userName: undefined,
-        phonenumber: undefined,
+        phone: undefined,
         status: undefined,
         deptId: undefined
       },
@@ -351,7 +307,7 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        phonenumber: [
+        phone: [
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
@@ -430,18 +386,15 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        userId: undefined,
-        deptId: undefined,
-        userName: undefined,
-        nickName: undefined,
-        password: undefined,
-        phonenumber: undefined,
-        email: undefined,
-        sex: undefined,
-        status: "0",
-        remark: undefined,
-        postIds: [],
-        roleIds: []
+        id: undefined,
+        name: undefined,
+        nickname: undefined,
+        balance: undefined,
+        additionalBalance: undefined,
+        sumOfTopUp: undefined,
+        sumOfConsumption: undefined,
+        phone: undefined,
+        createdTime: undefined
       };
       this.resetForm("form");
     },
@@ -458,19 +411,18 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.userId);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.getTreeselect();
       getMember().then(response => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         this.open = true;
-        this.title = "添加用户";
+        this.title = "添加会员";
         this.form.password = this.initPassword;
       });
     },
@@ -488,7 +440,7 @@ export default {
         },
 
         /** 消费按钮操作 */
-            consume(row) {
+    consume(row) {
                   this.$prompt('请输入"' + row.name + '"的消费金额', "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消"
@@ -498,21 +450,18 @@ export default {
                         this.getList();
                       });
                     }).catch(() => {});
-                },
+     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       this.getTreeselect();
-      const userId = row.cardNum || this.ids;
+      const userId = row.id || this.ids;
       getMember(userId).then(response => {
-        this.form = response.data;
+        this.form = response;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
-        this.form.postIds = response.postIds;
-        this.form.roleIds = response.roleIds;
         this.open = true;
         this.title = "修改会员信息";
-        this.form.password = "";
       });
     },
     /** 重置密码按钮操作 */
@@ -530,7 +479,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.userId != undefined) {
+          if (this.form.id != undefined) {
             updateUser(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;

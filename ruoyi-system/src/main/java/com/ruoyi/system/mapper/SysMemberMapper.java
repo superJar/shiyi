@@ -20,7 +20,7 @@ public interface SysMemberMapper {
 
     Integer insertSelective(SysMember member);
 
-    SysMember queryById(@Param("id") Integer id);
+    SysMember queryById(@Param("id") Long id);
 
     void batchDelete(@Param("list") List<Integer> list);
 }

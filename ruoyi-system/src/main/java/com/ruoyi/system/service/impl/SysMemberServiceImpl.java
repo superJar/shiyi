@@ -72,6 +72,7 @@ public class SysMemberServiceImpl implements SysMemberService {
         Integer additional = 0;
         additional = this.getAdditionalAmount(additional,amount);
 
+
         memberFromDB.setAdditionalBalance(additionalBalanceFromDB.add(new BigDecimal(additional)));
         memberFromDB.setSumOfTopUp(sumOfTopUpFromDB.add(topUpAmount));
 //        memberFromDB.setSumOfTopUp(memberFromDB.getSumOfTopUp() + topUpAmount.doubleValue());
@@ -230,7 +231,7 @@ public class SysMemberServiceImpl implements SysMemberService {
     }
 
     @Override
-    public SysMember echo(Integer id) {
+    public SysMember echo(Long id) {
         return sysMemberMapper.queryById(id);
     }
 

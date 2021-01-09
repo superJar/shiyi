@@ -19,5 +19,5 @@ public interface SysProductService {
 
     void batchDelete(List<Integer> ids);
 
-    SysProduct echo(Integer id);
+    SysProduct echo(Long id);
 }

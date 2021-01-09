@@ -4,7 +4,7 @@
 
     <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.SysMember">
         <!--@Table sys_member-->
-        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="id" column="ID"/>
         <result property="cardNum" column="CARD_NUM" jdbcType="VARCHAR"/>
         <result property="name" column="NAME" jdbcType="VARCHAR"/>
         <result property="nickname" column="NICKNAME" jdbcType="VARCHAR"/>

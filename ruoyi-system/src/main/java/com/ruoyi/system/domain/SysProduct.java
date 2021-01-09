@@ -19,7 +19,7 @@ public class SysProduct implements Serializable {
     /**
     * 主键ID
     */
-    private Integer id;
+    private Long id;
     /**
      * 商品名称
      */
@@ -72,13 +72,7 @@ public class SysProduct implements Serializable {
     private String spare3;
 
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

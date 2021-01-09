@@ -20,7 +20,7 @@ public class SysMember implements Serializable {
     /**
     * 主键ID
     */
-    private Integer id;
+    private Long id;
     /**
     * 卡号
     */

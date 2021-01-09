@@ -87,7 +87,7 @@ public class SysProductController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('system:product:save')")
     @GetMapping("/echo")
-    public SysProduct echo(Integer id){
+    public SysProduct echo(Long id){
         if(id == null){
             throw new RuntimeException("id不能为空！;");
         }

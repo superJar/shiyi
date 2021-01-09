@@ -23,5 +23,5 @@ public interface SysProductMapper {
 
     void batchDelete(@Param("list") List<Integer> list);
 
-    SysProduct queryById(@Param("id") Integer id);
+    SysProduct queryById(@Param("id") Long id);
 }

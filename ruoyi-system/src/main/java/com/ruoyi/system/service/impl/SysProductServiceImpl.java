@@ -51,7 +51,7 @@ public class SysProductServiceImpl implements SysProductService {
     }
 
     @Override
-    public SysProduct echo(Integer id) {
+    public SysProduct echo(Long id) {
         return sysProductMapper.queryById(id);
     }
 }

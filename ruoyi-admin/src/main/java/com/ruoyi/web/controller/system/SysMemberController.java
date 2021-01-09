@@ -96,7 +96,7 @@ public class SysMemberController extends BaseController {
     @GetMapping("/echo")
     public SysMember echo(Integer id){
         if(id == null){
-            throw new RuntimeException("id不能为空！;");
+            throw new RuntimeException("id不能为空！");
         }
         SysMember member = sysMemberService.echo(id);
         return member;

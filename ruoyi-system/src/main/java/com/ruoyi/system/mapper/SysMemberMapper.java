@@ -14,7 +14,7 @@ import java.util.List;
 public interface SysMemberMapper {
 
 
-    List<SysMember> queryCondition(@Param("name") String name, @Param("nickname") String nickname);
+    List<SysMember> queryCondition(SysMember member);
 
     Integer update(SysMember member);
 

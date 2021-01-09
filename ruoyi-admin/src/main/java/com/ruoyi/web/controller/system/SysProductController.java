@@ -1,11 +1,10 @@
 package com.ruoyi.web.controller.system;
 
 
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.Result;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysProduct;
@@ -26,7 +25,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/system/product")
-public class SysProductController {
+public class SysProductController extends BaseController {
     /**
      * 服务对象
      */
@@ -67,19 +66,10 @@ public class SysProductController {
      */
     @PreAuthorize("@ss.hasPermi('system:product:list')")
     @PostMapping("/list")
-    public Result<PageInfo<SysProduct>> list(@RequestBody JSONObject jsonObject){
-        try {
-
-            int pageNum = jsonObject.getInteger("pageNum");
-            int pageSize = jsonObject.getInteger("pageSize");
-            String queryString = jsonObject.getString("queryString");
-
-            PageInfo<SysProduct> page = sysProductService.page(pageNum,pageSize,queryString);
-            return Result.ok(page);
-        } catch (JSONException e) {
-            log.error("操作失败！{}", e.getMessage(), e);
-            return Result.fail("操作失败！");
-        }
+    public TableDataInfo list(@RequestBody SysProduct product){
+            startPage();
+            List<SysProduct> list = sysProductService.list(product);
+            return getDataTable(list);
     }
 
     @PreAuthorize("@ss.hasPermi('system:product:del')")

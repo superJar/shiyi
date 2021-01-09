@@ -1,13 +1,9 @@
 package com.ruoyi.system.service.impl;
 
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.system.domain.SysProduct;
 import com.ruoyi.system.mapper.SysProductMapper;
 import com.ruoyi.system.service.SysProductService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,15 +41,8 @@ public class SysProductServiceImpl implements SysProductService {
     }
 
     @Override
-    public PageInfo<SysProduct> page(int pageNum, int pageSize, String queryString) {
-        Page<SysProduct> page = PageHelper.startPage(pageNum, pageSize);
-        if(StringUtils.isNotBlank(queryString)){
-            queryString = "%"+queryString+"%";
-        }
-        List<SysProduct> list = sysProductMapper.queryByCondition(queryString);
-        PageInfo<SysProduct> pageInfo = page.toPageInfo();
-        pageInfo.setList(list);
-        return pageInfo;
+    public List<SysProduct> list(SysProduct product) {
+        return sysProductMapper.queryByCondition(product);
     }
 
     @Override

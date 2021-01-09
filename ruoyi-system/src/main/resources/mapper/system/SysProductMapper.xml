@@ -87,11 +87,25 @@
 <!--        </where>-->
 <!--    </select>-->
 
-    <select id="queryByCondition" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="queryByCondition" parameterType="com.ruoyi.system.domain.SysProduct" resultMap="BaseResultMap">
         select
             <include refid="BASE_COLUMN"></include>
         from sys_product
-        <if test="queryString != null and queryString != ''">where NAME like #{queryString}</if>
+        <where>
+            <if test="name != null and name != ''">
+                NAME like #{name}
+            </if>
+            <if test="type != null">
+                and TYPE = #{type}
+            </if>
+            <if test="price != null">
+                and PRICE = #{price}
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                and CREATED_BY like #{createdBy}
+            </if>
+        </where>
+        order by CREATED_TIME DESC
     </select>
 
     <!--新增所有列-->

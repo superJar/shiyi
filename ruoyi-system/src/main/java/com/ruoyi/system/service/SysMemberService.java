@@ -1,6 +1,5 @@
 package com.ruoyi.system.service;
 
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.system.domain.SysMember;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * @since 2021-01-06 17:43:49
  */
 public interface SysMemberService {
-    PageInfo<SysMember> page(Integer pageNum, Integer pageSize, String name, String nickname);
+    List<SysMember> page(SysMember member);
 
     Integer addOrEdit(SysMember member,String username);
 

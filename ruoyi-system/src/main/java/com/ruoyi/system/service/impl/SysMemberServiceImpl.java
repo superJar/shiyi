@@ -35,18 +35,8 @@ public class SysMemberServiceImpl implements SysMemberService {
     private final static String ROOM = "包房";
 
     @Override
-    public PageInfo<SysMember> page(Integer pageNum, Integer pageSize, String name, String nickname) {
-        Page<SysMember> page = PageHelper.startPage(pageNum, pageSize);
-        if(StringUtils.isNotBlank(name)){
-            name = "%"+name+"%";
-        }
-        if(StringUtils.isNotBlank(nickname)){
-            nickname = "%"+nickname+"%";
-        }
-        List<SysMember> list = sysMemberMapper.queryCondition(name,nickname);
-        PageInfo<SysMember> pageInfo = page.toPageInfo();
-        pageInfo.setList(list);
-        return pageInfo;
+    public List<SysMember> page(SysMember member) {
+        return sysMemberMapper.queryCondition(member);
     }
 
     @Override

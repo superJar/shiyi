@@ -108,7 +108,7 @@
 <!--    </select>-->
 
 
-    <select id="queryCondition" resultMap="BaseResultMap">
+    <select id="queryCondition" parameterType="com.ruoyi.system.domain.SysMember" resultMap="BaseResultMap">
         select
             <include refid="BASE_COLUMN"></include>
         from sys_member

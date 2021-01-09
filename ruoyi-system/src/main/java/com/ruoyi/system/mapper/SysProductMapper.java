@@ -19,7 +19,7 @@ public interface SysProductMapper {
 
     Integer update(SysProduct product);
 
-    List<SysProduct> queryByCondition(@Param("queryString") String queryString);
+    List<SysProduct> queryByCondition(SysProduct product);
 
     void batchDelete(@Param("list") List<Integer> list);
 }

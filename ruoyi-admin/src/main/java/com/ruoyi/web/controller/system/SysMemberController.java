@@ -1,11 +1,11 @@
 package com.ruoyi.web.controller.system;
 
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.Result;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysMember;
@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/system/member")
-public class SysMemberController {
+public class SysMemberController extends BaseController {
     /**
      * 服务对象
      */
@@ -48,7 +48,7 @@ public class SysMemberController {
     public Result addOrUpdate(@RequestBody SysMember member) {
         try {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-            Integer count = sysMemberService.addOrEdit(member,loginUser.getUsername());
+            Integer count = sysMemberService.addOrEdit(member, loginUser.getUsername());
 
             if (count == 0) {
                 return Result.fail("操作失败！");
@@ -65,19 +65,10 @@ public class SysMemberController {
     @Log
     @PreAuthorize("@ss.hasPermi('system:member:list')")
     @PostMapping("/list")
-    public Result<PageInfo<SysMember>> page(@RequestBody JSONObject jsonObject) {
-        try {
-            int pageNum = jsonObject.getInteger("pageNum");
-            int pageSize = jsonObject.getInteger("pageSize");
-            String name = jsonObject.getString("name");
-            String nickname = jsonObject.getString("nickname");
-            PageInfo<SysMember> page = sysMemberService.page(pageNum, pageSize,name,nickname);
-
-            return Result.ok(page);
-        } catch (Exception e) {
-            log.error("操作失败！{}", e.getMessage(), e);
-            return Result.fail("操作失败！");
-        }
+    public TableDataInfo page(@RequestBody SysMember member) {
+        startPage();
+        List<SysMember> list = sysMemberService.page(member);
+        return getDataTable(list);
     }
 
     /**
@@ -124,7 +115,7 @@ public class SysMemberController {
 
     @PreAuthorize("@ss.hasPermi('system:member:del')")
     @DeleteMapping("/batchDelete")
-    public Result batchDelete(@RequestBody List<Integer> ids){
+    public Result batchDelete(@RequestBody List<Integer> ids) {
 
         try {
             sysMemberService.batchDelete(ids);

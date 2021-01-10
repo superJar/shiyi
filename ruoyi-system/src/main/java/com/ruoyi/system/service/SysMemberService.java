@@ -26,5 +26,5 @@ public interface SysMemberService {
 
     SysMember echo(Long id);
 
-    void deduction(SysMember member);
+    SysMember deduction(SysMember member);
 }

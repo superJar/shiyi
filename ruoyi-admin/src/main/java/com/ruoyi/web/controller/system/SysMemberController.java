@@ -62,7 +62,6 @@ public class SysMemberController extends BaseController {
     }
 
     //分页查询
-    @Log
     @PreAuthorize("@ss.hasPermi('system:member:list')")
     @GetMapping("/list")
     public TableDataInfo page(SysMember member) {
@@ -105,11 +104,12 @@ public class SysMemberController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('system:member:consume')")
     @PutMapping("/deduction")
-    public void deduction(@RequestBody SysMember member){
+    public Result<SysMember> deduction(@RequestBody SysMember member){
         if(member == null){
             throw new RuntimeException("参数为空！");
         }
-        sysMemberService.deduction(member);
+        SysMember sysMember = sysMemberService.deduction(member);
+        return Result.ok(sysMember);
     }
 
 

@@ -91,7 +91,9 @@ public class SysMemberServiceImpl implements SysMemberService {
 //        if (additional != 0) {
 //            member.setAdditional(additional);
 //        }
-        return member;
+        memberFromDB.setTopUpAmount(topUpAmount);
+        memberFromDB.setAdditional(additional);
+        return memberFromDB;
     }
 
 
@@ -259,7 +261,7 @@ public class SysMemberServiceImpl implements SysMemberService {
 
     @Transactional
     @Override
-    public void deduction(SysMember member) {
+    public SysMember deduction(SysMember member) {
         SysMember memberFromDB = sysMemberMapper.queryById(member.getId());
 
         Double sumOfExpenditure = member.getSumOfExpenditure();
@@ -278,6 +280,7 @@ public class SysMemberServiceImpl implements SysMemberService {
         }
 
         sysMemberMapper.update(memberFromDB);
+        return memberFromDB;
     }
 
     /**

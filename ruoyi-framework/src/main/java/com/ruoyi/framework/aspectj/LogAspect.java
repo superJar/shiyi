@@ -33,6 +33,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -128,9 +129,11 @@ public class LogAspect {
                     SysMember sysMember = result.getData();
 
                     if (methodName.equalsIgnoreCase("topUp")) {
-                        title += sysMember.getName() + "本次充值了：" + sysMember.getTopUpAmount() + "元，另外赠送了：" + sysMember.getAdditional() + "元";
+                        Integer additional = sysMember.getAdditional() > 0 ? sysMember.getAdditional() : 0;
+                        title += sysMember.getName() + "本次充值了：" + sysMember.getTopUpAmount() + "元，另外赠送了：" + additional + "元";
                     } else if (methodName.equalsIgnoreCase("consume")) {
-                        title += sysMember.getName() + "本次消费了："+sysMember.getSumOfExpenditure()+"元，余额还有："+sysMember.getBalance().add(sysMember.getAdditionalBalance())+"元";
+                        BigDecimal balance = sysMember.getBalance().add(sysMember.getAdditionalBalance()).doubleValue() > 0 ? sysMember.getBalance().add(sysMember.getAdditionalBalance()) : new BigDecimal(0);
+                        title += sysMember.getName() + "本次消费了："+sysMember.getSumOfExpenditure()+"元，余额（包括赠送余额）还有："+balance+"元";
                     }
 
                 }

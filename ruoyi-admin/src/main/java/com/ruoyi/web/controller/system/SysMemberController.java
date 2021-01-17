@@ -102,6 +102,7 @@ public class SysMemberController extends BaseController {
         return member;
     }
 
+    @Log
     @PreAuthorize("@ss.hasPermi('system:member:consume')")
     @PutMapping("/deduction")
     public Result<SysMember> deduction(@RequestBody SysMember member){

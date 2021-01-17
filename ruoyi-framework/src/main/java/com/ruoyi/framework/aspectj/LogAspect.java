@@ -131,7 +131,7 @@ public class LogAspect {
                     if (methodName.equalsIgnoreCase("topUp")) {
                         Integer additional = sysMember.getAdditional() > 0 ? sysMember.getAdditional() : 0;
                         title += sysMember.getName() + "本次充值了：" + sysMember.getTopUpAmount() + "元，另外赠送了：" + additional + "元";
-                    } else if (methodName.equalsIgnoreCase("consume")) {
+                    } else if (methodName.equalsIgnoreCase("deduction")) {
                         BigDecimal balance = sysMember.getBalance().add(sysMember.getAdditionalBalance()).doubleValue() > 0 ? sysMember.getBalance().add(sysMember.getAdditionalBalance()) : new BigDecimal(0);
                         title += sysMember.getName() + "本次消费了："+sysMember.getSumOfExpenditure()+"元，余额（包括赠送余额）还有："+balance+"元";
                     }

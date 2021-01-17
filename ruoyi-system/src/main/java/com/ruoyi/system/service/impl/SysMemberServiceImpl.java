@@ -265,20 +265,31 @@ public class SysMemberServiceImpl implements SysMemberService {
         SysMember memberFromDB = sysMemberMapper.queryById(member.getId());
 
         Double sumOfExpenditure = member.getSumOfExpenditure();
+        float totalBalance = 0;
+        if(memberFromDB.getAdditionalBalance() != null){
 
-        float totalBalance = memberFromDB.getBalance().add(memberFromDB.getAdditionalBalance()).floatValue();
+            totalBalance = memberFromDB.getBalance().add(memberFromDB.getAdditionalBalance()).floatValue();
+        }else{
+            totalBalance = memberFromDB.getBalance().floatValue();
+        }
 
         if (sumOfExpenditure > totalBalance) {
             throw new RuntimeException("里面不够钱扣了！");
         }
 
-        memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), memberFromDB.getAdditionalBalance().floatValue(), memberFromDB);
-        if(memberFromDB.getSumOfConsumption() != 0){
+        if(memberFromDB.getAdditionalBalance() == null){
+            memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), 0, memberFromDB);
+
+        }else{
+
+            memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), memberFromDB.getAdditionalBalance().floatValue(), memberFromDB);
+        }
+        if(memberFromDB.getSumOfConsumption() != null){
             memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() + sumOfExpenditure);
         }else{
             memberFromDB.setSumOfConsumption(sumOfExpenditure);
         }
-
+        memberFromDB.setSumOfExpenditure(sumOfExpenditure);
         sysMemberMapper.update(memberFromDB);
         return memberFromDB;
     }

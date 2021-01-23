@@ -136,11 +136,11 @@ public class SysMemberController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('system:member:del')")
-    @DeleteMapping("/batchDelete")
-    public Result batchDelete(@RequestBody List<Integer> ids) {
+    @DeleteMapping("/{userIds}")
+    public Result batchDelete(@PathVariable List<Integer> userIds) {
 
         try {
-            sysMemberService.batchDelete(ids);
+            sysMemberService.batchDelete(userIds);
             return Result.ok();
         } catch (Exception e) {
             log.error("操作失败！{}", e.getMessage(), e);

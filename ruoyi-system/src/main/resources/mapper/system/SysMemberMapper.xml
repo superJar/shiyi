@@ -113,6 +113,7 @@
             <include refid="BASE_COLUMN"></include>
         from sys_member
             <where>
+                STATUS <![CDATA[<>]]> '0'
                 <if test="name != null and name != ''">
                     NAME like concat('%',#{name},'%')
                 </if>

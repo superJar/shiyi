@@ -19,19 +19,19 @@
         <result property="createdTime" column="CREATED_TIME" jdbcType="TIMESTAMP"/>
         <result property="updatedBy" column="UPDATED_BY" jdbcType="VARCHAR"/>
         <result property="updatedTime" column="UPDATED_TIME" jdbcType="TIMESTAMP"/>
-        <result property="spare1" column="SPARE1" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="spare2" column="SPARE2" jdbcType="VARCHAR"/>
         <result property="spare3" column="SPARE3" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="BASE_COLUMN">
-        ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
+        ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, STATUS, SPARE2, SPARE3
     </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
         select
-          ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3
+          ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, STATUS, SPARE2, SPARE3
         from shiyi.sys_member
         where ID = #{id}
     </select>
@@ -174,8 +174,8 @@
             <if test="updatedTime != null">
                 UPDATED_TIME = #{updatedTime},
             </if>
-            <if test="spare1 != null and spare1 != ''">
-                SPARE1 = #{spare1},
+            <if test="status != null and status != ''">
+                STATUS = #{status},
             </if>
             <if test="spare2 != null and spare2 != ''">
                 SPARE2 = #{spare2},
@@ -185,6 +185,18 @@
             </if>
         </set>
         where ID = #{id}
+    </update>
+
+    <!--批量逻辑删除-->
+    <update id="batchLogicDel">
+        update sys_member sm
+            <set>
+                sm.STATUS = '0'
+            </set>
+        WHERE sm.ID IN
+            <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
     </update>
 
     <insert id="insertSelective" keyColumn="ID" keyProperty="id" parameterType="com.ruoyi.system.domain.SysMember" useGeneratedKeys="true">
@@ -232,8 +244,8 @@
             <if test="updatedTime != null">
                 UPDATED_TIME,
             </if>
-            <if test="spare1 != null">
-                SPARE1,
+            <if test="status != null">
+                STATUS,
             </if>
             <if test="spare2 != null">
                 SPARE2,
@@ -285,8 +297,8 @@
             <if test="updatedTime != null">
                 #{updatedTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="spare1 != null">
-                #{spare1,jdbcType=VARCHAR},
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
             </if>
             <if test="spare2 != null">
                 #{spare2,jdbcType=VARCHAR},

@@ -82,7 +82,7 @@ public class SysMember implements Serializable {
     /**
     * 备用字段1
     */
-    private String spare1;
+    private String status;
     /**
     * 备用字段2
     */

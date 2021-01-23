@@ -243,9 +243,10 @@ public class SysMemberServiceImpl implements SysMemberService {
      *
      * @param ids
      */
+    @Transactional
     @Override
     public void batchDelete(List<Integer> ids) {
-        sysMemberMapper.batchDelete(ids);
+        sysMemberMapper.batchLogicDel(ids);
     }
 
     @Transactional

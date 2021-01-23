@@ -23,4 +23,6 @@ public interface SysMemberMapper {
     SysMember queryById(@Param("id") Long id);
 
     void batchDelete(@Param("list") List<Integer> list);
+
+    void batchLogicDel(@Param("ids") List<Integer> ids);
 }

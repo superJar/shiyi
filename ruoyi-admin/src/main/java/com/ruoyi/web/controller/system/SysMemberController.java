@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.Result;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -65,7 +66,16 @@ public class SysMemberController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:member:list')")
     @GetMapping("/list")
     public TableDataInfo page(SysMember member) {
+        SysUser user = tokenService.getLoginUser(ServletUtils.getRequest()).getUser();
+        if(user == null){
+            throw new RuntimeException("没有用户信息！");
+        }
+
         startPage();
+        if(user.getUserId() != 1){
+            member.setUserId(Integer.valueOf(String.valueOf(user.getUserId())));
+        }
+
         List<SysMember> list = sysMemberService.page(member);
         return getDataTable(list);
     }

@@ -80,13 +80,13 @@ public class SysMember implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedTime;
     /**
-    * 备用字段1
+    * 状态 1.充值，2.消费
     */
     private String status;
     /**
-    * 备用字段2
+    * 用户id
     */
-    private String spare2;
+    private Integer userId;
     /**
     * 备用字段3
     */

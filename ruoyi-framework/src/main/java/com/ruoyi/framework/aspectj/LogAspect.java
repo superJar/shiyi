@@ -15,7 +15,9 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysMember;
 import com.ruoyi.system.domain.SysOperLog;
+import com.ruoyi.system.domain.SysTransactionDetail;
 import com.ruoyi.system.mapper.SysOperLogMapper;
+import com.ruoyi.system.mapper.SysTransactionDetailMapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -35,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -53,6 +56,9 @@ public class LogAspect {
 
     @Resource
     private TokenService tokenService;
+
+    @Resource
+    private SysTransactionDetailMapper transactionDetailMapper;
 
     // 配置织入点
     @Pointcut("@annotation(com.ruoyi.common.annotation.Log)")
@@ -128,19 +134,26 @@ public class LogAspect {
                 if (result.getData() instanceof SysMember) {
                     SysMember sysMember = result.getData();
 
+                    SysTransactionDetail transactionDetail = new SysTransactionDetail();
+
+                    String transaction = ""; Integer type = null;
                     if (methodName.equalsIgnoreCase("topUp")) {
                         Integer additional = sysMember.getAdditional() > 0 ? sysMember.getAdditional() : 0;
                         title += sysMember.getName() + "本次充值了：" + sysMember.getTopUpAmount() + "元，另外赠送了：" + additional + "元";
+                        transaction += sysMember.getName() + "本次充值了：" + sysMember.getTopUpAmount() + "元，另外赠送了：" + additional + "元";
+                        type = 1;
+
                     } else if (methodName.equalsIgnoreCase("deduction")) {
                         BigDecimal balance = sysMember.getBalance().add(sysMember.getAdditionalBalance()).doubleValue() > 0 ? sysMember.getBalance().add(sysMember.getAdditionalBalance()) : new BigDecimal(0);
                         title += sysMember.getName() + "本次消费了："+sysMember.getSumOfExpenditure()+"元，余额（包括赠送余额）还有："+balance+"元";
+                        transaction += sysMember.getName() + "本次消费了："+sysMember.getSumOfExpenditure()+"元，余额（包括赠送余额）还有："+balance+"元";
+                        type = 2;
                     }
 
+                    // 记录充值/消费记录
+                    recordTransactionDetails(loginUser,transaction,type,transactionDetail,sysMember);
                 }
-
-
             }
-
 
             operLog.setTitle(title);
             // 保存数据库
@@ -151,6 +164,20 @@ public class LogAspect {
             log.error("异常信息:{}", exp.getMessage());
             exp.printStackTrace();
         }
+    }
+
+    private void recordTransactionDetails(LoginUser loginUser,String transaction, Integer type,SysTransactionDetail transactionDetail,SysMember sysMember) {
+        transactionDetail.setBalance(sysMember.getBalance());
+        transactionDetail.setTransaction(transaction);
+        transactionDetail.setCardNum(sysMember.getCardNum());
+        transactionDetail.setCreatedBy(loginUser.getUsername());
+        transactionDetail.setCreatedTime(new Date());
+        transactionDetail.setTransactionTime(new Date());
+        transactionDetail.setType(type);
+        transactionDetail.setUserName(loginUser.getUsername());
+        AsyncManager.me().execute(AsyncFactory.recordTransaction(transactionDetail));
+
+        //transactionDetailMapper.insertSelective(transactionDetail);
     }
 
     /**

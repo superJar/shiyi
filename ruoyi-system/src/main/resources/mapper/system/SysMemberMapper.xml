@@ -20,18 +20,18 @@
         <result property="updatedBy" column="UPDATED_BY" jdbcType="VARCHAR"/>
         <result property="updatedTime" column="UPDATED_TIME" jdbcType="TIMESTAMP"/>
         <result property="status" column="STATUS" jdbcType="VARCHAR"/>
-        <result property="spare2" column="SPARE2" jdbcType="VARCHAR"/>
+        <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="spare3" column="SPARE3" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="BASE_COLUMN">
-        ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, STATUS, SPARE2, SPARE3
+        ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, STATUS, USER_ID, SPARE3
     </sql>
 
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
         select
-          ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, STATUS, SPARE2, SPARE3
+          ID, CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, STATUS, USER_ID, SPARE3
         from shiyi.sys_member
         where ID = #{id}
     </select>
@@ -115,10 +115,13 @@
             <where>
                 STATUS <![CDATA[<>]]> '0'
                 <if test="name != null and name != ''">
-                    NAME like concat('%',#{name},'%')
+                    AND NAME like concat('%',#{name},'%')
                 </if>
                 <if test="nickname != null and nickname != ''">
-                    NICKNAME like concat('%',#{nickname},'%')
+                    AND NICKNAME like concat('%',#{nickname},'%')
+                </if>
+                <if test="userId != null and userId != ''">
+                    AND USER_ID = #{userId}
                 </if>
             </where>
     </select>
@@ -178,8 +181,8 @@
             <if test="status != null and status != ''">
                 STATUS = #{status},
             </if>
-            <if test="spare2 != null and spare2 != ''">
-                SPARE2 = #{spare2},
+            <if test="userId != null and userId != ''">
+                USER_ID = #{userId},
             </if>
             <if test="spare3 != null and spare3 != ''">
                 SPARE3 = #{spare3},
@@ -248,8 +251,8 @@
             <if test="status != null">
                 STATUS,
             </if>
-            <if test="spare2 != null">
-                SPARE2,
+            <if test="userId != null">
+                USER_ID,
             </if>
             <if test="spare3 != null">
                 SPARE3,
@@ -301,8 +304,8 @@
             <if test="status != null">
                 #{status,jdbcType=VARCHAR},
             </if>
-            <if test="spare2 != null">
-                #{spare2,jdbcType=VARCHAR},
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
             </if>
             <if test="spare3 != null">
                 #{spare3,jdbcType=VARCHAR},

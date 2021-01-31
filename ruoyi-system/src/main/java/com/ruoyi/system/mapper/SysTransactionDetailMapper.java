@@ -23,4 +23,6 @@ public interface SysTransactionDetailMapper {
     List<SysTransactionDetail> queryCondition(SysTransactionDetail transactionDetail);
 
     SysTransactionDetail echo(@Param("id") Integer id);
+
+    void updateMemberName(@Param("nameFromDB")String nameFromDB,@Param("name") String name);
 }

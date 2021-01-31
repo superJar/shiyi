@@ -5,6 +5,7 @@ import com.ruoyi.system.domain.SysMember;
 import com.ruoyi.system.domain.SysProduct;
 import com.ruoyi.system.mapper.SysMemberMapper;
 import com.ruoyi.system.service.SysMemberService;
+import com.ruoyi.system.service.SysTransactionDetailService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +28,8 @@ import java.util.stream.Collectors;
 public class SysMemberServiceImpl implements SysMemberService {
     @Resource
     private SysMemberMapper sysMemberMapper;
+    @Resource
+    private SysTransactionDetailService transactionDetailService;
     private final static String WOLF_KILL = "狼人杀";
     private final static String ROOM = "包房";
 
@@ -35,16 +38,23 @@ public class SysMemberServiceImpl implements SysMemberService {
         return sysMemberMapper.queryCondition(member);
     }
 
+    @Transactional
     @Override
     public Integer addOrEdit(SysMember member, String username) {
         return member.getId() == null ? insert(member, username) : update(member, username);
     }
 
     private Integer update(SysMember member, String username) {
+        // 更新交易明细
+        SysMember memberFromDB = sysMemberMapper.queryById(member.getId());
+        transactionDetailService.updateMemberName(memberFromDB.getName(),member.getName());
+
         member.setUpdatedBy(username);
         member.setUpdatedTime(new Date());
         return sysMemberMapper.update(member);
     }
+
+
 
     private Integer insert(SysMember member, String username) {
         member.setCreatedBy(username);
@@ -118,7 +128,7 @@ public class SysMemberServiceImpl implements SysMemberService {
             extraBalanceFromDB = memberFromDB.getAdditionalBalance().floatValue();
         }
         float balanceFromDB = 0;
-        if (memberFromDB.getBalance() != null){
+        if (memberFromDB.getBalance() != null) {
             balanceFromDB = memberFromDB.getBalance().floatValue();
         }
 
@@ -267,10 +277,10 @@ public class SysMemberServiceImpl implements SysMemberService {
 
         Double sumOfExpenditure = member.getSumOfExpenditure();
         float totalBalance = 0;
-        if(memberFromDB.getAdditionalBalance() != null){
+        if (memberFromDB.getAdditionalBalance() != null) {
 
             totalBalance = memberFromDB.getBalance().add(memberFromDB.getAdditionalBalance()).floatValue();
-        }else{
+        } else {
             totalBalance = memberFromDB.getBalance().floatValue();
         }
 
@@ -278,21 +288,28 @@ public class SysMemberServiceImpl implements SysMemberService {
             throw new RuntimeException("里面不够钱扣了！");
         }
 
-        if(memberFromDB.getAdditionalBalance() == null){
+        if (memberFromDB.getAdditionalBalance() == null) {
             memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), 0, memberFromDB);
 
-        }else{
+        } else {
 
             memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), memberFromDB.getAdditionalBalance().floatValue(), memberFromDB);
         }
-        if(memberFromDB.getSumOfConsumption() != null){
+        if (memberFromDB.getSumOfConsumption() != null) {
             memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() + sumOfExpenditure);
-        }else{
+        } else {
             memberFromDB.setSumOfConsumption(sumOfExpenditure);
         }
         memberFromDB.setSumOfExpenditure(sumOfExpenditure);
         sysMemberMapper.update(memberFromDB);
         return memberFromDB;
+    }
+
+
+
+    @Override
+    public Integer findExist(String name, String cardNum,Long id) {
+        return sysMemberMapper.getCountByCondition(name,cardNum,id);
     }
 
     /**

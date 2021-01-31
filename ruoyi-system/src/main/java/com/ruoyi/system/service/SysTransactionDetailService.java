@@ -16,4 +16,6 @@ public interface SysTransactionDetailService {
     void update(SysTransactionDetail transactionDetail);
 
     SysTransactionDetail echo(Integer id);
+
+    void updateMemberName(String nameFromDB,String name);
 }

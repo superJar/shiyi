@@ -33,4 +33,9 @@ public class SysTransactionDetailServiceImpl implements SysTransactionDetailServ
     public SysTransactionDetail echo(Integer id) {
         return transactionDetailMapper.echo(id);
     }
+
+    @Override
+    public void updateMemberName(String nameFromDB,String name) {
+        transactionDetailMapper.updateMemberName(nameFromDB,name);
+    }
 }

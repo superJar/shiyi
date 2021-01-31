@@ -126,6 +126,19 @@
             </where>
     </select>
 
+    <select id="getCountByCondition" resultType="java.lang.Integer">
+        select count(0) from shiyi.sys_member
+        <where>
+            <if test="name != null and name != ''">
+                NAME = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="cardNum != null and cardNum != ''">
+                and CARD_NUM = #{cardNum,jdbcType=VARCHAR}
+            </if>
+            and ID <![CDATA[<>]]> #{id}
+        </where>
+    </select>
+
     <!--新增所有列-->
 <!--    <insert id="insert" keyProperty="id" useGeneratedKeys="true">-->
 <!--        insert into shiyi.sys_member(CARD_NUM, NAME, NICKNAME, GENDER, PHONE, BALANCE, ADDITIONAL_BALANCE, SUM_OF_TOP_UP, SUM_OF_CONSUMPTION, REMARK, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, SPARE1, SPARE2, SPARE3)-->

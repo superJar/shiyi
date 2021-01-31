@@ -25,4 +25,8 @@ public interface SysMemberMapper {
     void batchDelete(@Param("list") List<Integer> list);
 
     void batchLogicDel(@Param("ids") List<Integer> ids);
+
+    Integer getCountByCondition(@Param("name") String name,
+                                @Param("cardNum")String cardNum,
+                                @Param("id") Long id);
 }

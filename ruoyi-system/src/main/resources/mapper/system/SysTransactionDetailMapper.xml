@@ -204,4 +204,8 @@
             UPDATED_TIME     = #{updatedTime,jdbcType=TIMESTAMP}
         where ID = #{id,jdbcType=INTEGER}
     </update>
+
+    <update id="updateMemberName">
+        update shiyi.sys_transaction_detail set USER_NAME = #{name,jdbcType=VARCHAR} where USER_NAME = #{nameFromDB,jdbcType=VARCHAR}
+    </update>
 </mapper>

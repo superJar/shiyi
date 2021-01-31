@@ -27,4 +27,8 @@ public interface SysMemberService {
     SysMember echo(Long id);
 
     SysMember deduction(SysMember member);
+
+
+
+    Integer findExist(String name,String cardNum,Long id);
 }

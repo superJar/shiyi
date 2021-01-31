@@ -12,6 +12,7 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysMember;
 import com.ruoyi.system.service.SysMemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,11 @@ public class SysMemberController extends BaseController {
     @PostMapping("/addOrUpdate")
     public Result addOrUpdate(@RequestBody SysMember member) {
         try {
+            // 校验
+            Result validation = validation(member);
+            if(validation != null){
+                return validation;
+            }
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
             Integer count = sysMemberService.addOrEdit(member, loginUser.getUsername());
 
@@ -61,7 +67,23 @@ public class SysMemberController extends BaseController {
             return Result.fail("操作失败！");
         }
     }
+    private Result validation(SysMember member) {
+        Integer count = 0;
+        if(StringUtils.isNotBlank(member.getName())){
+            count = sysMemberService.findExist(member.getName(),null,member.getId());
+            if(count > 0){
+                return Result.fail("不允许有重复的名字！");
+            }
+        }
 
+        if(StringUtils.isNotBlank(member.getCardNum())){
+            count = sysMemberService.findExist(null,member.getCardNum(),member.getId());
+            if(count > 0){
+                return Result.fail("不允许有重复的卡号！");
+            }
+        }
+        return null;
+    }
     //分页查询
     @PreAuthorize("@ss.hasPermi('system:member:list')")
     @GetMapping("/list")

@@ -11,9 +11,9 @@ export function listDetails(query) {
 }
 
 // 查询用户详细
-export function getMember(userId) {
+export function getDetails(userId) {
   return request({
-    url: '/system/member/' + praseStrEmpty(userId),
+    url: '/system/details/echo/' + praseStrEmpty(userId),
     method: 'get'
   })
 }
@@ -28,9 +28,9 @@ export function addUser(data) {
 }
 
 // 修改用户
-export function updateUser(data) {
+export function updateDetails(data) {
   return request({
-    url: '/system/member/addOrUpdate',
+    url: '/system/details/update',
     method: 'post',
     data: data
   })
@@ -149,6 +149,19 @@ export function consume(id, sumOfExpenditure) {
   return request({
     url: '/system/member/deduction',
     method: 'put',
+    data: data
+  })
+}
+
+//增加备注
+export function updateDetail(id,remark) {
+  const data = {
+    id,
+    remark
+  }
+  return request({
+    url: '/system/details/update',
+    method: 'post',
     data: data
   })
 }

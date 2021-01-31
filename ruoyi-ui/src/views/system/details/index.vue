@@ -31,16 +31,7 @@
         </el-form>
 
         <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button
-              type="success"
-              icon="el-icon-edit"
-              size="mini"
-              :disabled="single"
-              @click="handleUpdate"
-              v-hasPermi="['system:member:save']"
-            >增加备注</el-button>
-          </el-col>
+
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange" width="100">
@@ -56,6 +47,22 @@
               <span>{{ parseTime(scope.row.createdTime) }}</span>
             </template>
            </el-table-column>
+            <el-table-column
+                       label="操作"
+                       align="center"
+                       width="160"
+                       class-name="small-padding fixed-width"
+                     >
+                       <template slot-scope="scope">
+                         <el-button
+                           size="mini"
+                           type="text"
+                           icon="el-icon-edit"
+                           @click="updateDetail(scope.row)"
+                           v-hasPermi="['system:details:update']"
+                         >增加备注</el-button>
+                       </template>
+                     </el-table-column>
 
         </el-table>
 
@@ -117,7 +124,7 @@
 </template>
 
 <script>
-import { listDetails, getMember, delUser,topUp,consume, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/details";
+import { listDetails, getDetails, delUser,topUp,consume, addUser,updateDetail, updateDetails, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/details";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -365,12 +372,24 @@ export default {
                       });
                     }).catch(() => {});
      },
+      /** 增加备注操作 */
+         updateDetail(row) {
+                       this.$prompt('请输入备注信息', "提示", {
+                         confirmButtonText: "确定",
+                         cancelButtonText: "取消"
+                       }).then(({ value }) => {
+                           updateDetail(row.id,value).then(response => {
+                             this.msgSuccess("保存备注信息成功");
+                             this.getList();
+                           });
+                         }).catch(() => {});
+          },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       this.getTreeselect();
       const userId = row.id || this.ids;
-      getMember(userId).then(response => {
+      getDetails(userId).then(response => {
         this.form = response;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
@@ -394,14 +413,8 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateUser(this.form).then(response => {
+            updateDetails(this.form).then(response => {
               this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addUser(this.form).then(response => {
-              this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             });

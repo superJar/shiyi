@@ -174,7 +174,7 @@ public class LogAspect {
         transactionDetail.setCreatedTime(new Date());
         transactionDetail.setTransactionTime(new Date());
         transactionDetail.setType(type);
-        transactionDetail.setUserName(loginUser.getUsername());
+        transactionDetail.setUserName(sysMember.getName());
         AsyncManager.me().execute(AsyncFactory.recordTransaction(transactionDetail));
 
         //transactionDetailMapper.insertSelective(transactionDetail);

@@ -28,4 +28,9 @@ public class SysTransactionDetailServiceImpl implements SysTransactionDetailServ
     public void update(SysTransactionDetail transactionDetail) {
         transactionDetailMapper.updateByPrimaryKeySelective(transactionDetail);
     }
+
+    @Override
+    public SysTransactionDetail echo(Integer id) {
+        return transactionDetailMapper.echo(id);
+    }
 }

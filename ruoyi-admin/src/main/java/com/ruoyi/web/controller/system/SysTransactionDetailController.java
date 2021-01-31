@@ -7,11 +7,7 @@ import com.ruoyi.system.domain.SysTransactionDetail;
 import com.ruoyi.system.service.SysTransactionDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,5 +41,14 @@ public class SysTransactionDetailController extends BaseController {
     @PostMapping("/update")
     public void update(@RequestBody SysTransactionDetail transactionDetail){
         transactionDetailService.update(transactionDetail);
+    }
+
+    @GetMapping("/echo/{id}")
+    public SysTransactionDetail echo(@PathVariable("id") Integer id){
+        if(id == null){
+            throw  new RuntimeException("ID不能为空！！");
+        }
+        SysTransactionDetail transactionDetail = transactionDetailService.echo(id);
+        return transactionDetail;
     }
 }

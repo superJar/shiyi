@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.SysTransactionDetail;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface SysTransactionDetailMapper {
     int updateByPrimaryKey(SysTransactionDetail record);
 
     List<SysTransactionDetail> queryCondition(SysTransactionDetail transactionDetail);
+
+    SysTransactionDetail echo(@Param("id") Integer id);
 }

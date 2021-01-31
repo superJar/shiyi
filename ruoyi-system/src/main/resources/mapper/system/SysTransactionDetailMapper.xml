@@ -43,6 +43,7 @@
                     TRANSACTION_TIME <![CDATA[<=]]> #{transactionTime}
                 </if>
             </where>
+        order by CREATED_TIME DESC
     </select>
 
     <!--数据回显-->

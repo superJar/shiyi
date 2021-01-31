@@ -3,6 +3,8 @@ package com.ruoyi.system.mapper;
 import com.ruoyi.system.domain.SysTransactionDetail;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface SysTransactionDetailMapper {
     int deleteByPrimaryKey(Integer id);
@@ -16,4 +18,6 @@ public interface SysTransactionDetailMapper {
     int updateByPrimaryKeySelective(SysTransactionDetail record);
 
     int updateByPrimaryKey(SysTransactionDetail record);
+
+    List<SysTransactionDetail> queryCondition(SysTransactionDetail transactionDetail);
 }

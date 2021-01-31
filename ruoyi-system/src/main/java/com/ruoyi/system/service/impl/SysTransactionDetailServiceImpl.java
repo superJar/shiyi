@@ -23,4 +23,9 @@ public class SysTransactionDetailServiceImpl implements SysTransactionDetailServ
     public List<SysTransactionDetail> page(SysTransactionDetail transactionDetail) {
         return transactionDetailMapper.queryCondition(transactionDetail);
     }
+
+    @Override
+    public void update(SysTransactionDetail transactionDetail) {
+        transactionDetailMapper.updateByPrimaryKeySelective(transactionDetail);
+    }
 }

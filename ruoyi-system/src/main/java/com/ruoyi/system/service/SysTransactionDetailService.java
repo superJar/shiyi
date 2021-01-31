@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface SysTransactionDetailService {
     List<SysTransactionDetail> page(SysTransactionDetail transactionDetail);
+
+    void update(SysTransactionDetail transactionDetail);
 }

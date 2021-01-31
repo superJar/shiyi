@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,11 +33,17 @@ public class SysTransactionDetailController extends BaseController {
     @Resource
     private TokenService tokenService;
 
-    @PreAuthorize("@ss.hasPermi('system:transaction:list')")
+    @PreAuthorize("@ss.hasPermi('system:details:list')")
     @GetMapping("/list")
     public TableDataInfo page(SysTransactionDetail transactionDetail) {
         startPage();
-        List<SysTransactionDetail> transactionDetails = transactionDetailService.page(transactionDetail);
-        return getDataTable(transactionDetails);
+        List<SysTransactionDetail> list = transactionDetailService.page(transactionDetail);
+        return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('system:details:update')")
+    @PostMapping("/update")
+    public void update(@RequestBody SysTransactionDetail transactionDetail){
+        transactionDetailService.update(transactionDetail);
     }
 }

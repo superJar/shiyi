@@ -7,6 +7,7 @@ import com.ruoyi.system.domain.SysTransactionDetail;
 import com.ruoyi.system.service.SysTransactionDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ import java.util.List;
  * @details:
  */
 @RestController
-@RequestMapping("/system/transaction")
+@RequestMapping("/system/details")
 @Slf4j
 public class SysTransactionDetailController extends BaseController {
 
@@ -32,7 +33,7 @@ public class SysTransactionDetailController extends BaseController {
     private TokenService tokenService;
 
     @PreAuthorize("@ss.hasPermi('system:transaction:list')")
-    @PostMapping("/list")
+    @GetMapping("/list")
     public TableDataInfo page(SysTransactionDetail transactionDetail) {
         startPage();
         List<SysTransactionDetail> transactionDetails = transactionDetailService.page(transactionDetail);

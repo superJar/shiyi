@@ -1,6 +1,6 @@
 <template>
 <div>
-拾壹 CLUB 后台管理系统
+ <img class="indexImg" src="@/assets/images/index.png" >
 </div>
 </template>
 
@@ -22,6 +22,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.indexImg{
+  padding: -90px 90px;
+    margin: 0 0 20px;
+    height: 500px;
+}
 .home {
   blockquote {
     padding: 10px 20px;

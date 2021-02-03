@@ -19,6 +19,8 @@ public class SysTransactionDetailServiceImpl implements SysTransactionDetailServ
 
     @Resource
     private SysTransactionDetailMapper transactionDetailMapper;
+    @Resource
+    private SysOperLogMapper operLogMapper;
     @Override
     public List<SysTransactionDetail> page(SysTransactionDetail transactionDetail) {
         return transactionDetailMapper.queryCondition(transactionDetail);
@@ -38,4 +40,6 @@ public class SysTransactionDetailServiceImpl implements SysTransactionDetailServ
     public void updateMemberName(String nameFromDB,String name) {
         transactionDetailMapper.updateMemberName(nameFromDB,name);
     }
+
+
 }

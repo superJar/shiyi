@@ -285,21 +285,27 @@ public class SysMemberServiceImpl implements SysMemberService {
         }
 
         if (sumOfExpenditure > totalBalance) {
-            throw new RuntimeException("里面不够钱扣了！");
+            // 如果总消费大于总余额，可以为负债情况
+            memberFromDB.setAdditionalBalance(new BigDecimal(0));
+            memberFromDB.setBalance(new BigDecimal(totalBalance - sumOfExpenditure));
+
+        }else{
+            // 赠送余额为空时，直接扣真余额
+            if (memberFromDB.getAdditionalBalance() == null) {
+                memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), 0, memberFromDB);
+
+            } else {
+                // 不为空时，先扣真余额
+                memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), memberFromDB.getAdditionalBalance().floatValue(), memberFromDB);
+            }
         }
 
-        if (memberFromDB.getAdditionalBalance() == null) {
-            memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), 0, memberFromDB);
-
-        } else {
-
-            memberFromDB = deductionFromBalance(sumOfExpenditure, memberFromDB.getBalance().floatValue(), memberFromDB.getAdditionalBalance().floatValue(), memberFromDB);
-        }
         if (memberFromDB.getSumOfConsumption() != null) {
             memberFromDB.setSumOfConsumption(memberFromDB.getSumOfConsumption() + sumOfExpenditure);
         } else {
             memberFromDB.setSumOfConsumption(sumOfExpenditure);
         }
+
         memberFromDB.setSumOfExpenditure(sumOfExpenditure);
         sysMemberMapper.update(memberFromDB);
         return memberFromDB;

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shiyi.system.mapper.SysTransactionDetailMapper">
+    <resultMap id="BaseResultMap" type="com.shiyi.system.domain.SysTransactionDetail">
+        <id column="ID" jdbcType="INTEGER" property="id"/>
+        <result column="CARD_NUM" jdbcType="VARCHAR" property="cardNum"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="BALANCE" jdbcType="DECIMAL" property="balance"/>
+        <result column="TYPE" jdbcType="INTEGER" property="type"/>
+        <result column="TRANSACTION" jdbcType="VARCHAR" property="transaction"/>
+        <result column="TRANSACTION_TIME" jdbcType="TIMESTAMP" property="transactionTime"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="SPARE2" jdbcType="VARCHAR" property="spare2"/>
+        <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="CREATED_TIME" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="UPDATED_TIME" jdbcType="TIMESTAMP" property="updatedTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        ID, CARD_NUM, USER_NAME, BALANCE, `TYPE`, `TRANSACTION`, TRANSACTION_TIME, REMARK,
+    SPARE2, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_transaction_detail
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--列表查询-->
+    <select id="queryCondition" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from sys_transaction_detail
+            <where>
+                <if test="userName != null and userName != ''">
+                    USER_NAME LIKE CONCAT('%',#{userName},'%')
+                </if>
+                <if test="type != null">
+                    TYPE = #{type}
+                </if>
+                <if test="transactionTime != null">
+                    TRANSACTION_TIME <![CDATA[<=]]> #{transactionTime}
+                </if>
+            </where>
+        order by CREATED_TIME DESC
+    </select>
+
+    <!--数据回显-->
+    <select id="echo" resultMap="BaseResultMap">
+        select REMARK FROM shiyi.sys_transaction_detail WHERE ID = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from sys_transaction_detail
+        where ID = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="com.shiyi.system.domain.SysTransactionDetail"
+            useGeneratedKeys="true">
+        insert into sys_transaction_detail (CARD_NUM, USER_NAME, BALANCE,
+                                            `TYPE`, `TRANSACTION`, TRANSACTION_TIME,
+                                            REMARK, SPARE2, CREATED_BY,
+                                            CREATED_TIME, UPDATED_BY, UPDATED_TIME)
+        values (#{cardNum,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL},
+                #{type,jdbcType=VARCHAR}, #{transaction,jdbcType=DECIMAL}, #{transactionTime,jdbcType=TIMESTAMP},
+                #{remark,jdbcType=VARCHAR}, #{spare2,jdbcType=VARCHAR}, #{createdBy,jdbcType=VARCHAR},
+                #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="ID" keyProperty="id"
+            parameterType="com.shiyi.system.domain.SysTransactionDetail" useGeneratedKeys="true">
+        insert into sys_transaction_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cardNum != null">
+                CARD_NUM,
+            </if>
+            <if test="userName != null">
+                USER_NAME,
+            </if>
+            <if test="balance != null">
+                BALANCE,
+            </if>
+            <if test="type != null">
+                `TYPE`,
+            </if>
+            <if test="transaction != null">
+                `TRANSACTION`,
+            </if>
+            <if test="transactionTime != null">
+                TRANSACTION_TIME,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="spare2 != null">
+                SPARE2,
+            </if>
+            <if test="createdBy != null">
+                CREATED_BY,
+            </if>
+            <if test="createdTime != null">
+                CREATED_TIME,
+            </if>
+            <if test="updatedBy != null">
+                UPDATED_BY,
+            </if>
+            <if test="updatedTime != null">
+                UPDATED_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cardNum != null">
+                #{cardNum,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="balance != null">
+                #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="transaction != null">
+                #{transaction,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionTime != null">
+                #{transactionTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="spare2 != null">
+                #{spare2,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null">
+                #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updatedTime != null">
+                #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.shiyi.system.domain.SysTransactionDetail">
+        update sys_transaction_detail
+        <set>
+            <if test="cardNum != null">
+                CARD_NUM = #{cardNum,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                USER_NAME = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="balance != null">
+                BALANCE = #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="type != null">
+                `TYPE` = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="transaction != null">
+                `TRANSACTION` = #{transaction,jdbcType=DECIMAL},
+            </if>
+            <if test="transactionTime != null">
+                TRANSACTION_TIME = #{transactionTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="spare2 != null">
+                SPARE2 = #{spare2,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null">
+                CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null">
+                UPDATED_BY = #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updatedTime != null">
+                UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.shiyi.system.domain.SysTransactionDetail">
+        update sys_transaction_detail
+        set CARD_NUM         = #{cardNum,jdbcType=VARCHAR},
+            USER_NAME        = #{userName,jdbcType=VARCHAR},
+            BALANCE          = #{balance,jdbcType=DECIMAL},
+            `TYPE`           = #{type,jdbcType=VARCHAR},
+            `TRANSACTION`    = #{transaction,jdbcType=DECIMAL},
+            TRANSACTION_TIME = #{transactionTime,jdbcType=TIMESTAMP},
+            REMARK           = #{remark,jdbcType=VARCHAR},
+            SPARE2           = #{spare2,jdbcType=VARCHAR},
+            CREATED_BY       = #{createdBy,jdbcType=VARCHAR},
+            CREATED_TIME     = #{createdTime,jdbcType=TIMESTAMP},
+            UPDATED_BY       = #{updatedBy,jdbcType=VARCHAR},
+            UPDATED_TIME     = #{updatedTime,jdbcType=TIMESTAMP}
+        where ID = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateMemberName">
+        update shiyi.sys_transaction_detail set USER_NAME = #{name,jdbcType=VARCHAR} where USER_NAME = #{nameFromDB,jdbcType=VARCHAR}
+    </update>
+</mapper>

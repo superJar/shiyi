@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.system.domain.SysTransactionDetail;
+import com.ruoyi.system.mapper.SysOperLogMapper;
 import com.ruoyi.system.mapper.SysTransactionDetailMapper;
 import com.ruoyi.system.service.SysTransactionDetailService;
 import org.springframework.stereotype.Service;

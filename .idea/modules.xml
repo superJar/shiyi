@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ruoyi-admin/ruoyi-admin.iml" filepath="$PROJECT_DIR$/ruoyi-admin/ruoyi-admin.iml" />
       <module fileurl="file://$PROJECT_DIR$/ruoyi-framework/ruoyi-framework.iml" filepath="$PROJECT_DIR$/ruoyi-framework/ruoyi-framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/ruoyi-generator/ruoyi-generator.iml" filepath="$PROJECT_DIR$/ruoyi-generator/ruoyi-generator.iml" />
       <module fileurl="file://$PROJECT_DIR$/ruoyi-quartz/ruoyi-quartz.iml" filepath="$PROJECT_DIR$/ruoyi-quartz/ruoyi-quartz.iml" />

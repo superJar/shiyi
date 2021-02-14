@@ -7,11 +7,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ruoyi-framework" />
-        <module name="ruoyi-admin" />
+        <module name="shiyi-system" />
+        <module name="shiyi-admin" />
         <module name="ruoyi-generator" />
+        <module name="shiyi-common" />
         <module name="ruoyi-quartz" />
-        <module name="ruoyi-common" />
+        <module name="shiyi-framework" />
         <module name="ruoyi-system" />
+        <module name="shiyi-quartz" />
+        <module name="shiyi-generator" />
+        <module name="ruoyi-admin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -22,6 +27,13 @@
       <module name="ruoyi-generator" target="1.8" />
       <module name="ruoyi-quartz" target="1.8" />
       <module name="ruoyi-system" target="1.8" />
+      <module name="shiyi" target="1.8" />
+      <module name="shiyi-admin" target="1.8" />
+      <module name="shiyi-common" target="1.8" />
+      <module name="shiyi-framework" target="1.8" />
+      <module name="shiyi-generator" target="1.8" />
+      <module name="shiyi-quartz" target="1.8" />
+      <module name="shiyi-system" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
